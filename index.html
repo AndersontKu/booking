@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO 基本設定 -->
+    <title>御景家＿神明花 | 神明花基礎課程報名</title>
+    <meta name="description" content="御景家＿神明花基礎課程正式開放報名。專為零基礎學員設計，由淺入深教學，親手完成精緻敬神花藝。立即預約名額。">
+    <meta name="keywords" content="御景家, 神明花, 敬神花, 花藝課程, 手作課程, 神明花報名">
+    <meta name="author" content="御景家 YUJINGJIA">
+
+    <!-- 社群分享標籤 (Open Graph) - 讓 LINE/FB 分享更好看 -->
+    <meta property="og:title" content="御景家＿神明花 | 基礎課程報名登記">
+    <meta property="og:description" content="專為零基礎設計的神明花手作課，點擊進入報名系統預約席次。">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&q=80&w=1200">
+    <meta property="og:url" content="https://your-username.github.io/booking/"> <!-- 部署後可修改為您的實際網址 -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        :root {
+            --starlux-gold: #D4B78F;
+            --starlux-gold-dark: #A38A6A;
+            --starlux-black: #12110F;
+            --starlux-gray: #1C1A17;
+            --starlux-accent: #3A3225;
+            --starlux-text: #E8DCC4;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--starlux-black);
+            color: var(--starlux-text);
+            scroll-behavior: smooth;
+        }
+
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .bg-pattern {
+            background-image: radial-gradient(circle at 2px 2px, rgba(212, 183, 143, 0.05) 1px, transparent 0);
+            background-size: 40px 40px;
+        }
+
+        input, select, textarea {
+            background-color: #171512 !important;
+            border: 1px solid var(--starlux-accent) !important;
+            color: var(--starlux-text) !important;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--starlux-gold) !important;
+            box-shadow: 0 0 0 1px var(--starlux-gold) !important;
+            outline: none;
+        }
+
+        input[type="checkbox"] {
+            appearance: none;
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 1px solid var(--starlux-gold) !important;
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+        }
+        input[type="checkbox"]:checked::after {
+            content: "\f00c";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--starlux-gold);
+            font-size: 0.8rem;
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--starlux-gold) 0%, var(--starlux-gold-dark) 100%);
+            color: var(--starlux-black);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-gold:hover:not(:disabled) {
+            filter: brightness(1.1);
+            letter-spacing: 0.1em;
+            box-shadow: 0 10px 20px rgba(212, 183, 143, 0.2);
+        }
+
+        .btn-gold:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fadeInUp {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        #success-modal {
+            backdrop-filter: blur(8px);
+        }
+    </style>
+</head>
+<body class="bg-pattern min-h-screen">
+
+    <!-- 導覽列 -->
+    <nav class="sticky top-0 z-50 bg-[#12110F]/90 backdrop-blur-md border-b border-[#2A251B]">
+        <div class="max-w-4xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded bg-gradient-to-br from-[#D4B78F] to-[#A39171] flex items-center justify-center shadow-lg">
+                    <span class="text-[#12110F] font-serif font-bold text-lg leading-none">御</span>
+                </div>
+                <h1 class="text-xl font-serif tracking-[0.2em] text-[#D4B78F]">御景家<span class="text-[#8A8068] text-sm ml-2 font-sans tracking-normal font-light">神明花</span></h1>
+            </div>
+            <div class="flex gap-4 md:gap-6 text-xs md:text-sm tracking-widest text-[#A39171]">
+                <a href="https://line.me/ti/g/NPayXcjfUr" target="_blank" class="hover:text-[#D4B78F] transition-colors"><i class="fa-brands fa-line mr-1"></i> 加入群組</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主視覺區 -->
+    <header class="relative h-[30vh] flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&q=80&w=1600')] bg-cover bg-center opacity-20"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#12110F]"></div>
+        <div class="relative text-center px-6 animate-fadeInUp">
+            <h2 class="text-3xl md:text-4xl font-serif tracking-[0.2em] text-[#D4B78F] mb-3">神明花基礎課程</h2>
+            <p class="text-[#A39171] tracking-[0.1em] font-light text-sm">報名登記表</p>
+        </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto px-6 pb-24 -mt-8 relative z-10">
+        
+        <!-- 課程公告資訊 -->
+        <div class="grid grid-cols-1 gap-6 mb-10">
+            <div class="bg-[#1C1A17]/80 border border-[#3A3225] rounded-lg p-6 space-y-4">
+                <div class="flex items-center gap-2 text-[#D4B78F] mb-2">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <h3 class="font-bold tracking-widest">報名須知</h3>
+                </div>
+                <ul class="text-sm text-[#A39171] space-y-3 leading-relaxed list-decimal pl-5">
+                    <li>本課程為全天授課，名額有限，課前將依報名人數準備上課及回家練習材料。</li>
+                    <li>完成繳費後即為保留名額，課程開始後恕不辦理退費，敬請理解。</li>
+                    <li>材料於上課當日發放，未能出席者恕不補發或寄送。</li>
+                    <li>如臨時無法出席或取消，請於開課前「三日」告知，感謝。</li>
+                </ul>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-[#1C1A17]/80 border border-[#3A3225] rounded-lg p-6">
+                    <div class="flex items-center gap-2 text-[#D4B78F] mb-3">
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                        <h3 class="font-bold tracking-widest">課程說明</h3>
+                    </div>
+                    <p class="text-xs leading-relaxed text-[#A39171]">
+                        本課程特別適合沒有手作經驗的學員。教學將從最基礎開始，步驟清楚、節奏輕鬆，即使是第一次接觸神明花／敬神花，也能安心完成屬於自己的作品。
+                    </p>
+                </div>
+                <div class="bg-[#1C1A17]/80 border border-[#3A3225] rounded-lg p-6">
+                    <div class="flex items-center gap-2 text-[#D4B78F] mb-3">
+                        <i class="fa-solid fa-wallet"></i>
+                        <h3 class="font-bold tracking-widest">繳費方式</h3>
+                    </div>
+                    <ul class="text-xs leading-relaxed text-[#A39171] space-y-2 list-decimal pl-4">
+                        <li>本課程採 <span class="text-[#D4B78F]">現場現金繳費制</span>。</li>
+                        <li>請於課程當天攜帶現金至現場完成繳費，感謝您的理解與配合。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 報名表單 -->
+        <div class="bg-[#1C1A17] border border-[#3A3225] rounded-xl shadow-2xl p-8 md:p-12">
+            <form id="bookingForm" class="space-y-10">
+                
+                <section class="space-y-8">
+                    <div class="flex items-center gap-4 mb-2">
+                        <span class="text-[#D4B78F] font-serif text-xl">Enrollment</span>
+                        <h3 class="text-sm tracking-[0.3em] text-[#D4B78F] border-b border-[#3A3225] flex-grow pb-1 uppercase">填寫報名資料</h3>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-3">
+                            <label class="text-xs tracking-widest text-[#8A8068] uppercase flex justify-between">
+                                <span>姓名 / Name</span>
+                                <span class="text-[#8B0000]">*必填</span>
+                            </label>
+                            <input type="text" name="name" required class="w-full px-4 py-3 rounded text-sm" placeholder="請輸入完整姓名">
+                        </div>
+                        <div class="space-y-3">
+                            <label class="text-xs tracking-widest text-[#8A8068] uppercase flex justify-between">
+                                <span>聯絡電話 / Phone</span>
+                                <span class="text-[#8B0000]">*必填</span>
+                            </label>
+                            <input type="tel" name="phone" required class="w-full px-4 py-3 rounded text-sm" placeholder="請輸入聯絡電話">
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <label class="text-xs tracking-widest text-[#8A8068] uppercase flex justify-between">
+                            <span>電子郵件 / Email</span>
+                            <span class="text-[#8B0000]">*必填</span>
+                        </label>
+                        <input type="email" name="email" required class="w-full px-4 py-3 rounded text-sm" placeholder="接收確認信件使用">
+                    </div>
+
+                    <div class="space-y-3">
+                        <label class="text-xs tracking-widest text-[#8A8068] uppercase">課程名稱 / Course <span class="text-[#8B0000]">*</span></label>
+                        <div class="relative">
+                            <select name="course" required class="w-full px-4 py-3 rounded text-sm appearance-none cursor-default bg-[#171512]">
+                                <option value="神明花基礎課程｜2/25（日）｜$4,880" selected>神明花基礎課程｜2/25（日）｜$4,880</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="pt-4">
+                        <label class="flex items-start gap-4 cursor-pointer group">
+                            <div class="pt-1">
+                                <input type="checkbox" name="agreement" required>
+                            </div>
+                            <span class="text-sm leading-relaxed text-[#A39171] group-hover:text-[#D4B78F] transition-colors">
+                                【報名確認聲明與同意】<span class="text-[#8B0000]">*</span><br>
+                                <span class="text-xs opacity-80 font-light">本人已閱讀並同意，本課程採 課程當天現場現金繳費，並同意依上述方式辦理相關費用事宜。</span>
+                            </span>
+                        </label>
+                    </div>
+                </section>
+
+                <div class="pt-6 border-t border-[#3A3225]">
+                    <button type="submit" id="submitBtn" class="w-full btn-gold py-5 rounded-lg text-lg font-medium tracking-[0.2em] shadow-xl">
+                        確認提交報名
+                    </button>
+                    
+                    <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-4 text-[10px] tracking-widest text-[#5C5547] text-center md:text-left">
+                        <div>
+                            <i class="fa-solid fa-envelope mr-2"></i> yujinhome868@gmail.com
+                        </div>
+                        <div class="md:text-right">
+                            <i class="fa-brands fa-line mr-2"></i> 官方 LINE 群組已同步聯動
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer class="bg-[#0A0A0A] py-16 border-t border-[#2A251B] text-center">
+        <div class="mb-8 opacity-40">
+            <div class="w-12 h-12 rounded bg-[#C5A880] mx-auto flex items-center justify-center">
+                <span class="text-[#12110F] font-serif font-bold text-2xl">御</span>
+            </div>
+        </div>
+        <p class="text-[#A39171] text-[10px] tracking-[0.3em] uppercase">© 2024 YUJINGJIA SHENMING FLOWER. ALL RIGHTS RESERVED.</p>
+    </footer>
+
+    <!-- 成功彈窗 -->
+    <div id="success-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-6">
+        <div class="absolute inset-0 bg-black/95"></div>
+        <div class="bg-[#1C1A17] border border-[#D4B78F] rounded-xl p-10 max-w-sm w-full relative text-center shadow-[0_0_60px_rgba(212,183,143,0.15)] animate-fadeInUp">
+            <div class="w-16 h-16 bg-[#D4B78F] rounded-full flex items-center justify-center mx-auto mb-8">
+                <i class="fa-solid fa-check text-[#12110F] text-3xl"></i>
+            </div>
+            <h3 class="text-2xl font-serif text-[#D4B78F] mb-4 tracking-[0.2em]">報名已受理</h3>
+            <p class="text-[#A39171] text-sm font-light leading-relaxed mb-10">
+                感謝您的預約。資料已同步至試算表與 LINE 管理群組。<br>確認信件已發送至您的電子郵件，請查收。
+            </p>
+            <button onclick="window.location.reload()" class="w-full py-4 border border-[#D4B78F] text-[#D4B78F] hover:bg-[#D4B78F] hover:text-[#12110F] transition-all rounded tracking-widest text-sm">
+                確定
+            </button>
+        </div>
+    </div>
+
+    <!-- 載入中 -->
+    <div id="loading-overlay" class="fixed inset-0 z-[110] hidden bg-black/80 flex items-center justify-center">
+        <div class="text-center">
+            <div class="w-10 h-10 border-2 border-[#D4B78F] border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
+            <p class="text-[#D4B78F] text-xs tracking-[0.3em] uppercase">Processing Registration...</p>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('bookingForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const loading = document.getElementById('loading-overlay');
+        const successModal = document.getElementById('success-modal');
+        
+        // 已代入您的 Google Apps Script 部署網址
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbx0ZtWwShCgCMZYiEP3DCspfq-KXgx8l0fR9nC2xXbLzgVFCY0YuqFCN-VDowr-rYpt/exec'; 
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            
+            loading.classList.remove('hidden');
+            submitBtn.disabled = true;
+
+            const formData = new FormData(form);
+            
+            fetch(scriptURL, { 
+                method: 'POST', 
+                body: formData 
+            })
+            .then(response => {
+                loading.classList.add('hidden');
+                successModal.classList.remove('hidden');
+            })
+            .catch(error => {
+                loading.classList.add('hidden');
+                submitBtn.disabled = false;
+                alert('系統暫時繁忙，請稍後再試或直接聯繫官方 LINE。');
+                console.error('Error!', error.message);
+            });
+        });
+    </script>
+</body>
+</html>
