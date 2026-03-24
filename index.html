@@ -13,151 +13,207 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
         :root {
-            --starlux-gold: #D4B78F;
-            --starlux-gold-dark: #A38A6A;
-            --starlux-black: #12110F;
-            --starlux-gray: #1C1A17;
-            --starlux-accent: #3A3225;
-            --starlux-text: #E8DCC4;
+            --brand-gold: #D4B78F;
+            --brand-gold-dark: #A38A6A;
+            --brand-black: #0D0C0B;
+            --brand-gray: #161412;
+            --brand-accent: #2A251B;
+            --brand-text: #E8DCC4;
         }
 
         body {
             font-family: 'Noto Sans TC', sans-serif;
-            background-color: var(--starlux-black);
-            color: var(--starlux-text);
+            background-color: var(--brand-black);
+            color: var(--brand-text);
             scroll-behavior: smooth;
+            overflow-x: hidden;
         }
 
-        .font-serif {
-            font-family: 'Playfair Display', serif;
-        }
+        .font-serif { font-family: 'Playfair Display', serif; }
 
         .bg-pattern {
-            background-image: radial-gradient(circle at 2px 2px, rgba(212, 183, 143, 0.05) 1px, transparent 0);
-            background-size: 40px 40px;
+            background-color: var(--brand-black);
+            background-image: 
+                radial-gradient(circle at 2px 2px, rgba(212, 183, 143, 0.03) 1px, transparent 0),
+                radial-gradient(circle at 50% 50%, rgba(212, 183, 143, 0.05) 0%, transparent 50%);
+            background-size: 40px 40px, 100% 100%;
         }
 
         input, select, textarea {
-            background-color: #171512 !important;
-            border: 1px solid var(--starlux-accent) !important;
-            color: var(--starlux-text) !important;
-            transition: all 0.3s ease;
+            background-color: rgba(23, 21, 18, 0.8) !important;
+            border: 1px solid var(--brand-accent) !important;
+            color: var(--brand-text) !important;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            backdrop-filter: blur(5px);
         }
 
         input:focus, select:focus, textarea:focus {
-            border-color: var(--starlux-gold) !important;
-            box-shadow: 0 0 0 1px var(--starlux-gold) !important;
+            border-color: var(--brand-gold) !important;
+            box-shadow: 0 0 15px rgba(212, 183, 143, 0.15) !important;
+            background-color: rgba(30, 27, 23, 1) !important;
             outline: none;
+            transform: translateY(-1px);
         }
 
         .btn-gold {
-            background: linear-gradient(135deg, var(--starlux-gold) 0%, var(--starlux-gold-dark) 100%);
-            color: var(--starlux-black);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            background: linear-gradient(135deg, var(--brand-gold) 0%, var(--brand-gold-dark) 100%);
+            color: #12110F;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            border: none;
+        }
+
+        .btn-gold::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 25%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(30deg);
+            transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
         .btn-gold:hover:not(:disabled) {
             filter: brightness(1.1);
-            letter-spacing: 0.1em;
-            box-shadow: 0 10px 20px rgba(212, 183, 143, 0.2);
+            letter-spacing: 0.2em;
+            box-shadow: 0 15px 35px rgba(212, 183, 143, 0.25);
+            transform: translateY(-2px);
         }
 
+        .glass-panel {
+            background: rgba(22, 20, 18, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 183, 143, 0.1);
+            box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.7);
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { border-color: rgba(212, 183, 143, 0.5); box-shadow: 0 0 20px rgba(212, 183, 143, 0.1); }
+            50% { border-color: rgba(212, 183, 143, 0.1); box-shadow: 0 0 5px rgba(212, 183, 143, 0); }
+        }
+
+        .modal-glow { animation: borderGlow 4s infinite ease-in-out; }
+
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .animate-fadeInUp {
-            animation: fadeInUp 0.8s ease-out forwards;
+        .animate-fadeInUp { animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--brand-gold);
         }
+
+        .tracking-premium { letter-spacing: 0.3em; }
     </style>
 </head>
 <body class="bg-pattern min-h-screen">
 
     <!-- 導覽列 -->
-    <nav class="sticky top-0 z-50 bg-[#12110F]/90 backdrop-blur-md border-b border-[#2A251B]">
-        <div class="max-w-4xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded bg-gradient-to-br from-[#D4B78F] to-[#A39171] flex items-center justify-center shadow-lg">
-                    <span class="text-[#12110F] font-serif font-bold text-lg leading-none">御</span>
+    <nav class="sticky top-0 z-50 bg-[#0D0C0B]/80 backdrop-blur-xl border-b border-[#2A251B]/50">
+        <div class="max-w-4xl mx-auto px-6 py-5 flex justify-between items-center">
+            <div class="flex items-center gap-4 group cursor-pointer">
+                <div class="w-9 h-9 rounded-sm border border-[#D4B78F]/40 flex items-center justify-center transition-all duration-700 group-hover:border-[#D4B78F] group-hover:rotate-45">
+                    <span class="text-[#D4B78F] font-serif font-bold text-lg group-hover:-rotate-45 transition-all duration-700">御</span>
                 </div>
-                <h1 class="text-xl font-serif tracking-[0.2em] text-[#D4B78F]">御景家<span class="text-[#8A8068] text-sm ml-2 font-sans tracking-normal font-light">神明花</span></h1>
+                <div class="flex flex-col">
+                    <h1 class="text-xl font-serif tracking-premium text-[#D4B78F]">御景家</h1>
+                    <span class="text-[8px] tracking-[0.4em] text-[#5C5547] uppercase -mt-1 font-light">YUJINGJIA ART STUDIO</span>
+                </div>
             </div>
-            <div class="flex gap-4 md:gap-6 text-xs md:text-sm tracking-widest text-[#A39171]">
-                <a href="https://line.me/ti/g/NPayXcjfUr" target="_blank" class="hover:text-[#D4B78F] transition-colors"><i class="fa-brands fa-line mr-1"></i> 加入群組</a>
+            <div class="flex gap-4 md:gap-6 text-[10px] md:text-xs tracking-[0.3em] text-[#A39171] uppercase font-light">
+                <a href="https://line.me/ti/g/NPayXcjfUr" target="_blank" class="hover:text-[#D4B78F] transition-all duration-300 flex items-center gap-2">
+                    <i class="fa-brands fa-line text-sm"></i> Join Community 加入群組
+                </a>
             </div>
         </div>
     </nav>
 
     <!-- 主視覺區 -->
-    <header class="relative h-[25vh] flex items-center justify-center overflow-hidden">
-        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&q=80&w=1600')] bg-cover bg-center opacity-20"></div>
-        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#12110F]"></div>
+    <header class="relative h-[30vh] flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&q=80&w=1600')] bg-cover bg-center opacity-10 scale-110"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#0D0C0B]/80 to-[#0D0C0B]"></div>
         <div class="relative text-center px-6 animate-fadeInUp">
-            <h2 class="text-3xl md:text-4xl font-serif tracking-[0.2em] text-[#D4B78F] mb-3">神明花基礎課程</h2>
-            <p class="text-[#A39171] tracking-[0.1em] font-light text-sm">報名登記表</p>
+            <div class="inline-block px-4 py-1 border border-[#D4B78F]/20 rounded-full text-[9px] tracking-[0.4em] text-[#A39171] mb-4 uppercase">Exquisite Floral Class</div>
+            <h2 class="text-3xl md:text-4xl font-serif tracking-[0.25em] text-[#D4B78F] mb-4">神明花基礎課程</h2>
+            <div class="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#D4B78F]/40 to-transparent mx-auto"></div>
         </div>
     </header>
 
     <main class="max-w-3xl mx-auto px-6 pb-24 relative z-10">
         <!-- 報名表單 -->
-        <div class="bg-[#1C1A17] border border-[#3A3225] rounded-xl shadow-2xl p-8 md:p-12">
-            <form id="bookingForm" class="space-y-10">
-                <section class="space-y-8">
+        <div class="glass-panel rounded-3xl p-10 md:p-16 animate-fadeInUp">
+            <form id="bookingForm" class="space-y-12">
+                <section class="space-y-10">
                     <div class="flex items-center gap-4 mb-2">
-                        <span class="text-[#D4B78F] font-serif text-xl">Enrollment</span>
-                        <h3 class="text-sm tracking-[0.3em] text-[#D4B78F] border-b border-[#3A3225] flex-grow pb-1 uppercase">填寫報名資料</h3>
+                        <span class="text-[#D4B78F] font-serif text-2xl opacity-50 italic">Registration <span class="text-sm font-sans not-italic ml-2 opacity-80">填寫報名資料</span></span>
+                        <div class="h-[1px] flex-grow bg-gradient-to-r from-[#3A3225] to-transparent"></div>
                     </div>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div class="space-y-3">
-                            <label class="text-xs tracking-widest text-[#8A8068] flex justify-between">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <div class="space-y-4">
+                            <label class="text-[10px] tracking-[0.3em] text-[#8A8068] flex justify-between uppercase font-medium">
                                 <span>姓名 / Name</span>
-                                <span class="text-[#8B0000]">*必填</span>
+                                <span class="text-[#8B0000] opacity-80 font-bold tracking-widest">*必填</span>
                             </label>
-                            <input type="text" name="name" required class="w-full px-4 py-3 rounded text-sm" placeholder="請輸入姓名">
+                            <input type="text" name="name" required class="w-full px-5 py-4 rounded-xl text-sm" placeholder="請輸入姓名">
                         </div>
-                        <div class="space-y-3">
-                            <label class="text-xs tracking-widest text-[#8A8068] flex justify-between">
+                        <div class="space-y-4">
+                            <label class="text-[10px] tracking-[0.3em] text-[#8A8068] flex justify-between uppercase font-medium">
                                 <span>聯絡電話 / Phone</span>
-                                <span class="text-[#8B0000]">*必填</span>
+                                <span class="text-[#8B0000] opacity-80 font-bold tracking-widest">*必填</span>
                             </label>
-                            <input type="tel" name="phone" required class="w-full px-4 py-3 rounded text-sm" placeholder="請輸入聯絡電話">
+                            <input type="tel" name="phone" required class="w-full px-5 py-4 rounded-xl text-sm" placeholder="請輸入聯絡電話">
                         </div>
                     </div>
 
-                    <div class="space-y-3">
-                        <label class="text-xs tracking-widest text-[#8A8068] flex justify-between">
+                    <div class="space-y-4">
+                        <label class="text-[10px] tracking-[0.3em] text-[#8A8068] flex justify-between uppercase font-medium">
                             <span>電子郵件 / Email</span>
-                            <span class="text-[#8B0000]">*必填</span>
+                            <span class="text-[#8B0000] opacity-80 font-bold tracking-widest">*必填</span>
                         </label>
-                        <input type="email" name="email" required class="w-full px-4 py-3 rounded text-sm" placeholder="將用於寄送確認信與通知">
+                        <input type="email" name="email" required class="w-full px-5 py-4 rounded-xl text-sm" placeholder="將用於寄送確認信與通知">
                     </div>
 
-                    <div class="space-y-3">
-                        <label class="text-xs tracking-widest text-[#8A8068]">課程名稱 / Course</label>
-                        <select name="course" required class="w-full px-4 py-3 rounded text-sm">
+                    <div class="space-y-4">
+                        <label class="text-[10px] tracking-[0.3em] text-[#8A8068] uppercase font-medium">課程名稱 / Course Selection</label>
+                        <select name="course" required class="w-full px-5 py-4 rounded-xl text-sm appearance-none cursor-pointer">
                             <option value="神明花基礎課程｜2/25（日）｜$4,880" selected>神明花基礎課程｜2/25（日）｜$4,880</option>
                         </select>
                     </div>
 
-                    <div class="pt-4">
-                        <label class="flex items-start gap-4 cursor-pointer">
-                            <input type="checkbox" name="agreement" required class="mt-1">
-                            <span class="text-sm leading-relaxed text-[#A39171]">本人已閱讀並同意，本課程採 課程當天現場現金繳費,並同意依上述方式辦理相關費用事宜。</span>
+                    <div class="pt-6 border-t border-[#2A251B]/50">
+                        <label class="flex items-start gap-5 cursor-pointer group">
+                            <div class="mt-1">
+                                <input type="checkbox" name="agreement" required class="ring-offset-black">
+                            </div>
+                            <div class="space-y-1">
+                                <span class="text-[11px] md:text-xs leading-relaxed text-[#A39171] group-hover:text-[#D4B78F] transition-colors duration-300 tracking-wider">
+                                    本人已閱讀並同意，本課程採 <span class="text-[#D4B78F]">課程當天現場現金繳費</span>，並同意依上述方式辦理相關費用事宜。
+                                </span>
+                                <div class="text-[9px] text-[#8B0000] opacity-80 font-bold uppercase tracking-[0.2em]">*必填 / Required</div>
+                            </div>
                         </label>
                     </div>
                 </section>
 
-                <div class="pt-6 border-t border-[#3A3225]">
-                    <button type="submit" id="submitBtn" class="w-full btn-gold py-5 rounded-lg text-lg font-medium tracking-[0.2em] shadow-xl">
+                <div class="pt-8">
+                    <button type="submit" id="submitBtn" class="w-full btn-gold py-6 rounded-2xl text-sm font-bold tracking-[0.5em] uppercase shadow-2xl">
                         確認提交報名
                     </button>
+                    <p class="text-center text-[9px] text-[#3A3225] mt-6 tracking-widest">© YUJINGJIA ART STUDIO EST. 2024</p>
                 </div>
             </form>
         </div>
@@ -165,24 +221,24 @@
 
     <!-- 成功/候補彈窗 -->
     <div id="success-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-6">
-        <div class="absolute inset-0 bg-black/95 backdrop-blur-md"></div>
-        <div class="bg-[#1C1A17] border border-[#D4B78F] rounded-xl p-8 md:p-10 max-w-lg w-full relative text-center shadow-2xl animate-fadeInUp">
-            <div class="w-16 h-16 bg-[#D4B78F] rounded-full flex items-center justify-center mx-auto mb-8">
-                <i id="modalIcon" class="fa-solid fa-check text-[#12110F] text-3xl"></i>
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-xl"></div>
+        <div class="bg-[#0D0C0B] border border-[#D4B78F]/30 rounded-[2rem] p-10 md:p-14 max-w-lg w-full relative text-center shadow-[0_0_100px_rgba(0,0,0,1)] animate-fadeInUp modal-glow">
+            <div class="w-20 h-20 bg-gradient-to-br from-[#D4B78F] to-[#A38A6A] rounded-full flex items-center justify-center mx-auto mb-10 shadow-lg">
+                <i id="modalIcon" class="fa-solid fa-check text-[#12110F] text-2xl"></i>
             </div>
-            <h3 id="modalTitle" class="text-xl md:text-2xl font-serif text-[#D4B78F] mb-4 tracking-[0.2em]">報名已受理</h3>
-            <div id="modalDesc" class="text-[#A39171] text-sm font-light leading-relaxed mb-10 text-left"></div>
-            <button id="closeModalBtn" onclick="location.reload()" class="w-full py-4 border border-[#D4B78F] text-[#D4B78F] hover:bg-[#D4B78F] hover:text-[#12110F] transition-all rounded tracking-widest text-sm font-bold">
+            <h3 id="modalTitle" class="text-2xl md:text-3xl font-serif text-[#D4B78F] mb-6 tracking-[0.2em]">報名已受理</h3>
+            <div id="modalDesc" class="text-[#A39171] text-sm md:text-base font-light leading-loose mb-12 text-left space-y-4"></div>
+            <button id="closeModalBtn" onclick="location.reload()" class="w-full py-5 btn-gold rounded-xl tracking-[0.4em] text-xs font-bold uppercase">
                 確認
             </button>
         </div>
     </div>
 
     <!-- 載入中 -->
-    <div id="loading-overlay" class="fixed inset-0 z-[110] hidden bg-black/80 flex items-center justify-center text-[#D4B78F]">
+    <div id="loading-overlay" class="fixed inset-0 z-[110] hidden bg-black/90 backdrop-blur-sm flex items-center justify-center text-[#D4B78F]">
         <div class="text-center">
-            <div class="w-10 h-10 border-2 border-[#D4B78F] border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
-            <p class="text-xs tracking-widest">處理中...</p>
+            <div class="w-12 h-12 border-2 border-[#D4B78F]/20 border-t-[#D4B78F] rounded-full animate-spin mx-auto mb-8"></div>
+            <p class="text-[10px] tracking-[0.5em] uppercase opacity-60">Processing...</p>
         </div>
     </div>
 
@@ -196,6 +252,7 @@
         const modalIcon = document.getElementById('modalIcon');
         const closeModalBtn = document.getElementById('closeModalBtn');
         
+        // 此 URL 請保持與您原本功能一致
         const scriptURL = 'https://script.google.com/macros/s/AKfycbx0ZtWwShCgCMZYiEP3DCspfq-KXgx8l0fR9nC2xXbLzgVFCY0YuqFCN-VDowr-rYpt/exec'; 
 
         // 頁面開啟時自動檢查是否額滿
@@ -211,20 +268,19 @@
         });
 
         function showFullNotification() {
-            modalIcon.className = 'fa-solid fa-bell text-[#12110F] text-3xl';
+            modalIcon.className = 'fa-solid fa-bell text-[#12110F] text-2xl';
             modalTitle.innerText = '名額已額滿通知';
             modalDesc.innerHTML = `
                 <div class="space-y-4">
-                    <p>目前本場次報名已額滿，感謝你的關注與支持 🙏</p>
-                    <p>如果你願意留下聯絡資訊，我們可以為你保留候補資格：</p>
-                    <ul class="list-disc pl-5 space-y-1">
-                        <li>一旦有名額釋出，將依序通知你遞補；</li>
-                        <li>同時也會在下次開課或相關活動開放時，優先寄送通知給你。</li>
+                    <p class="text-[#E8DCC4] border-b border-[#3A3225] pb-2">目前本場次報名已額滿，感謝您的關注 🙏</p>
+                    <p>如果您願意留下聯絡資訊，我們將為您保留<strong>候補資格</strong>：</p>
+                    <ul class="space-y-2 opacity-90">
+                        <li class="flex items-start gap-3"><span class="text-[#D4B78F]">✦</span> <span>一旦名額釋出，將依序通知您遞補</span></li>
+                        <li class="flex items-start gap-3"><span class="text-[#D4B78F]">✦</span> <span>下次開課或相關活動開放時優先通知</span></li>
                     </ul>
-                    <p>期待有機會與你見面，謝謝你的耐心等候。</p>
                 </div>
             `;
-            closeModalBtn.innerText = "我願意填寫候補資訊";
+            closeModalBtn.innerText = "填寫候補資訊";
             closeModalBtn.onclick = () => { successModal.classList.add('hidden'); };
             successModal.classList.remove('hidden');
         }
@@ -243,12 +299,12 @@
                 
                 if (data.isFull) {
                     modalTitle.innerText = '候補登記成功';
-                    modalDesc.innerHTML = '<p>您已成功列入候補名單！一旦有名額釋出，我們將優先發送 Email 與電話通知您。</p>';
-                    modalIcon.className = 'fa-solid fa-envelope-open-text text-[#12110F] text-3xl';
+                    modalDesc.innerHTML = `<p class="text-center">您已列入候補名單，一旦有名額釋出將依序通知。</p>`;
+                    modalIcon.className = 'fa-solid fa-envelope-open-text text-[#12110F] text-2xl';
                 } else {
                     modalTitle.innerText = '報名正式成功';
-                    modalDesc.innerHTML = '<p>恭喜您成功報名本次課程！名額已為您保留。確認信件已寄送到您的電子信箱。</p>';
-                    modalIcon.className = 'fa-solid fa-check text-[#12110F] text-3xl';
+                    modalDesc.innerHTML = `<p class="text-center">恭喜您成功報名！確認信已寄發，名額已為您保留。</p>`;
+                    modalIcon.className = 'fa-solid fa-check text-[#12110F] text-2xl';
                 }
 
                 closeModalBtn.innerText = "確定並關閉";
