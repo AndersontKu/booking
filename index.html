@@ -10,12 +10,11 @@
     <meta name="keywords" content="御景家, 神明花, 敬神花, 花藝課程, 手作課程, 神明花報名">
     <meta name="author" content="御景家 YUJINGJIA">
 
-    <!-- 社群分享標籤 (Open Graph) - 讓 LINE/FB 分享更好看 -->
+    <!-- 社群分享標籤 (Open Graph) -->
     <meta property="og:title" content="御景家＿神明花 | 基礎課程報名登記">
     <meta property="og:description" content="專為零基礎設計的神明花手作課，點擊進入報名系統預約席次。">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&q=80&w=1200">
-    <meta property="og:url" content="https://your-username.github.io/booking/"> <!-- 部署後可修改為您的實際網址 -->
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -62,27 +61,6 @@
             outline: none;
         }
 
-        input[type="checkbox"] {
-            appearance: none;
-            width: 1.25rem;
-            height: 1.25rem;
-            border: 1px solid var(--starlux-gold) !important;
-            border-radius: 4px;
-            cursor: pointer;
-            position: relative;
-        }
-        input[type="checkbox"]:checked::after {
-            content: "\f00c";
-            font-family: "Font Awesome 6 Free";
-            font-weight: 900;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: var(--starlux-gold);
-            font-size: 0.8rem;
-        }
-
         .btn-gold {
             background: linear-gradient(135deg, var(--starlux-gold) 0%, var(--starlux-gold-dark) 100%);
             color: var(--starlux-black);
@@ -95,11 +73,6 @@
             box-shadow: 0 10px 20px rgba(212, 183, 143, 0.2);
         }
 
-        .btn-gold:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -107,10 +80,6 @@
 
         .animate-fadeInUp {
             animation: fadeInUp 0.8s ease-out forwards;
-        }
-
-        #success-modal {
-            backdrop-filter: blur(8px);
         }
     </style>
 </head>
@@ -148,43 +117,29 @@
             <div class="bg-[#1C1A17]/80 border border-[#3A3225] rounded-lg p-6 space-y-4">
                 <div class="flex items-center gap-2 text-[#D4B78F] mb-2">
                     <i class="fa-solid fa-circle-info"></i>
-                    <h3 class="font-bold tracking-widest">報名須知</h3>
+                    <h3 class="font-bold tracking-widest">報名須知 (限定 5 名)</h3>
                 </div>
                 <ul class="text-sm text-[#A39171] space-y-3 leading-relaxed list-decimal pl-5">
-                    <li>本課程為全天授課，名額有限，課前將依報名人數準備上課及回家練習材料。</li>
+                    <li>本課程為全天小班授課，<span class="text-[#D4B78F]">名額僅限 5 位</span>，額滿將自動列入候補名單。</li>
                     <li>完成繳費後即為保留名額，課程開始後恕不辦理退費，敬請理解。</li>
-                    <li>材料於上課當日發放，未能出席者恕不補發或寄送。</li>
-                    <li>如臨時無法出席或取消，請於開課前「三日」告知，感謝。</li>
+                    <li>如臨時無法出席或取消，請於開課前「三日」告知，感謝配合。</li>
                 </ul>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-[#1C1A17]/80 border border-[#3A3225] rounded-lg p-6">
-                    <div class="flex items-center gap-2 text-[#D4B78F] mb-3">
-                        <i class="fa-solid fa-chalkboard-user"></i>
-                        <h3 class="font-bold tracking-widest">課程說明</h3>
-                    </div>
-                    <p class="text-xs leading-relaxed text-[#A39171]">
-                        本課程特別適合沒有手作經驗的學員。教學將從最基礎開始，步驟清楚、節奏輕鬆，即使是第一次接觸神明花／敬神花，也能安心完成屬於自己的作品。
-                    </p>
+            <div class="bg-[#1C1A17]/80 border border-[#3A3225] rounded-lg p-6">
+                <div class="flex items-center gap-2 text-[#D4B78F] mb-3">
+                    <i class="fa-solid fa-wallet"></i>
+                    <h3 class="font-bold tracking-widest">繳費方式</h3>
                 </div>
-                <div class="bg-[#1C1A17]/80 border border-[#3A3225] rounded-lg p-6">
-                    <div class="flex items-center gap-2 text-[#D4B78F] mb-3">
-                        <i class="fa-solid fa-wallet"></i>
-                        <h3 class="font-bold tracking-widest">繳費方式</h3>
-                    </div>
-                    <ul class="text-xs leading-relaxed text-[#A39171] space-y-2 list-decimal pl-4">
-                        <li>本課程採 <span class="text-[#D4B78F]">現場現金繳費制</span>。</li>
-                        <li>請於課程當天攜帶現金至現場完成繳費，感謝您的理解與配合。</li>
-                    </ul>
-                </div>
+                <p class="text-xs leading-relaxed text-[#A39171]">
+                    本課程採 <span class="text-[#D4B78F]">現場現金繳費制</span>。請於課程當天攜帶現金至現場完成繳費。
+                </p>
             </div>
         </div>
 
         <!-- 報名表單 -->
         <div class="bg-[#1C1A17] border border-[#3A3225] rounded-xl shadow-2xl p-8 md:p-12">
             <form id="bookingForm" class="space-y-10">
-                
                 <section class="space-y-8">
                     <div class="flex items-center gap-4 mb-2">
                         <span class="text-[#D4B78F] font-serif text-xl">Enrollment</span>
@@ -197,7 +152,7 @@
                                 <span>姓名 / Name</span>
                                 <span class="text-[#8B0000]">*必填</span>
                             </label>
-                            <input type="text" name="name" required class="w-full px-4 py-3 rounded text-sm" placeholder="請輸入完整姓名">
+                            <input type="text" name="name" required class="w-full px-4 py-3 rounded text-sm" placeholder="請輸入姓名">
                         </div>
                         <div class="space-y-3">
                             <label class="text-xs tracking-widest text-[#8A8068] uppercase flex justify-between">
@@ -218,22 +173,15 @@
 
                     <div class="space-y-3">
                         <label class="text-xs tracking-widest text-[#8A8068] uppercase">課程名稱 / Course <span class="text-[#8B0000]">*</span></label>
-                        <div class="relative">
-                            <select name="course" required class="w-full px-4 py-3 rounded text-sm appearance-none cursor-default bg-[#171512]">
-                                <option value="神明花基礎課程｜2/25（日）｜$4,880" selected>神明花基礎課程｜2/25（日）｜$4,880</option>
-                            </select>
-                        </div>
+                        <select name="course" required class="w-full px-4 py-3 rounded text-sm bg-[#171512]">
+                            <option value="神明花基礎課程｜2/25（日）｜$4,880" selected>神明花基礎課程｜2/25（日）｜$4,880 (限5名)</option>
+                        </select>
                     </div>
 
                     <div class="pt-4">
-                        <label class="flex items-start gap-4 cursor-pointer group">
-                            <div class="pt-1">
-                                <input type="checkbox" name="agreement" required>
-                            </div>
-                            <span class="text-sm leading-relaxed text-[#A39171] group-hover:text-[#D4B78F] transition-colors">
-                                【報名確認聲明與同意】<span class="text-[#8B0000]">*</span><br>
-                                <span class="text-xs opacity-80 font-light">本人已閱讀並同意，本課程採 課程當天現場現金繳費，並同意依上述方式辦理相關費用事宜。</span>
-                            </span>
+                        <label class="flex items-start gap-4 cursor-pointer">
+                            <input type="checkbox" name="agreement" required class="mt-1">
+                            <span class="text-sm leading-relaxed text-[#A39171]">本人已理解此課程限 5 名正取，超出名額將轉為候補，並同意當天現場繳費。</span>
                         </label>
                     </div>
                 </section>
@@ -242,40 +190,20 @@
                     <button type="submit" id="submitBtn" class="w-full btn-gold py-5 rounded-lg text-lg font-medium tracking-[0.2em] shadow-xl">
                         確認提交報名
                     </button>
-                    
-                    <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-4 text-[10px] tracking-widest text-[#5C5547] text-center md:text-left">
-                        <div>
-                            <i class="fa-solid fa-envelope mr-2"></i> yujinhome868@gmail.com
-                        </div>
-                        <div class="md:text-right">
-                            <i class="fa-brands fa-line mr-2"></i> 官方 LINE 群組已同步聯動
-                        </div>
-                    </div>
                 </div>
             </form>
         </div>
     </main>
 
-    <footer class="bg-[#0A0A0A] py-16 border-t border-[#2A251B] text-center">
-        <div class="mb-8 opacity-40">
-            <div class="w-12 h-12 rounded bg-[#C5A880] mx-auto flex items-center justify-center">
-                <span class="text-[#12110F] font-serif font-bold text-2xl">御</span>
-            </div>
-        </div>
-        <p class="text-[#A39171] text-[10px] tracking-[0.3em] uppercase">© 2024 YUJINGJIA SHENMING FLOWER. ALL RIGHTS RESERVED.</p>
-    </footer>
-
-    <!-- 成功彈窗 -->
+    <!-- 成功/候補彈窗 -->
     <div id="success-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-6">
-        <div class="absolute inset-0 bg-black/95"></div>
-        <div class="bg-[#1C1A17] border border-[#D4B78F] rounded-xl p-10 max-w-sm w-full relative text-center shadow-[0_0_60px_rgba(212,183,143,0.15)] animate-fadeInUp">
+        <div class="absolute inset-0 bg-black/95 backdrop-blur-md"></div>
+        <div class="bg-[#1C1A17] border border-[#D4B78F] rounded-xl p-10 max-w-sm w-full relative text-center shadow-2xl animate-fadeInUp">
             <div class="w-16 h-16 bg-[#D4B78F] rounded-full flex items-center justify-center mx-auto mb-8">
-                <i class="fa-solid fa-check text-[#12110F] text-3xl"></i>
+                <i id="modalIcon" class="fa-solid fa-check text-[#12110F] text-3xl"></i>
             </div>
-            <h3 class="text-2xl font-serif text-[#D4B78F] mb-4 tracking-[0.2em]">報名已受理</h3>
-            <p class="text-[#A39171] text-sm font-light leading-relaxed mb-10">
-                感謝您的預約。資料已同步至試算表與 LINE 管理群組。<br>確認信件已發送至您的電子郵件，請查收。
-            </p>
+            <h3 id="modalTitle" class="text-2xl font-serif text-[#D4B78F] mb-4 tracking-[0.2em]">報名已受理</h3>
+            <p id="modalDesc" class="text-[#A39171] text-sm font-light leading-relaxed mb-10"></p>
             <button onclick="window.location.reload()" class="w-full py-4 border border-[#D4B78F] text-[#D4B78F] hover:bg-[#D4B78F] hover:text-[#12110F] transition-all rounded tracking-widest text-sm">
                 確定
             </button>
@@ -283,10 +211,10 @@
     </div>
 
     <!-- 載入中 -->
-    <div id="loading-overlay" class="fixed inset-0 z-[110] hidden bg-black/80 flex items-center justify-center">
+    <div id="loading-overlay" class="fixed inset-0 z-[110] hidden bg-black/80 flex items-center justify-center text-[#D4B78F]">
         <div class="text-center">
             <div class="w-10 h-10 border-2 border-[#D4B78F] border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
-            <p class="text-[#D4B78F] text-xs tracking-[0.3em] uppercase">Processing Registration...</p>
+            <p class="text-xs tracking-widest uppercase">處理中...</p>
         </div>
     </div>
 
@@ -296,30 +224,42 @@
         const loading = document.getElementById('loading-overlay');
         const successModal = document.getElementById('success-modal');
         
-        // 已代入您的 Google Apps Script 部署網址
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDesc = document.getElementById('modalDesc');
+        const modalIcon = document.getElementById('modalIcon');
+        
+        // 請確認此處網址為您的 Google Apps Script 部署網址
         const scriptURL = 'https://script.google.com/macros/s/AKfycbx0ZtWwShCgCMZYiEP3DCspfq-KXgx8l0fR9nC2xXbLzgVFCY0YuqFCN-VDowr-rYpt/exec'; 
 
         form.addEventListener('submit', e => {
             e.preventDefault();
-            
             loading.classList.remove('hidden');
             submitBtn.disabled = true;
 
             const formData = new FormData(form);
             
-            fetch(scriptURL, { 
-                method: 'POST', 
-                body: formData 
-            })
-            .then(response => {
+            fetch(scriptURL, { method: 'POST', body: formData })
+            .then(response => response.json()) 
+            .then(data => {
                 loading.classList.add('hidden');
+                
+                // 5 人邏輯：後端回傳 isFull 為 true 代表已超過 5 人
+                if (data.isFull) {
+                    modalTitle.innerText = '已列入候補';
+                    modalDesc.innerHTML = '目前 5 位正取名額已滿。系統已將您列入<span class="text-[#D4B78F]">「候補名單」</span>。<br>如有缺額釋出將主動聯繫您。';
+                    modalIcon.className = 'fa-solid fa-hourglass-half text-[#12110F] text-3xl';
+                } else {
+                    modalTitle.innerText = '報名成功';
+                    modalDesc.innerHTML = '恭喜您成功報名！名額已為您保留。<br>期待當天與您見面。';
+                    modalIcon.className = 'fa-solid fa-check text-[#12110F] text-3xl';
+                }
+
                 successModal.classList.remove('hidden');
             })
             .catch(error => {
                 loading.classList.add('hidden');
                 submitBtn.disabled = false;
-                alert('系統暫時繁忙，請稍後再試或直接聯繫官方 LINE。');
-                console.error('Error!', error.message);
+                alert('報名失敗，請檢查網路或聯繫官方 LINE。');
             });
         });
     </script>
