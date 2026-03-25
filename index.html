@@ -3,10 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>御景家＿神明花 | 課程報名系統</title>
+
+    <!-- ═══ SEO 基本設定 ═══ -->
+    <title>御景家＿神明花 | 神明花基礎課程報名</title>
+    <meta name="description" content="御景家＿神明花基礎課程正式開放報名。專為零基礎學員設計，由淺入深教學，親手完成精緻敬神花藝。立即預約名額。">
+    <meta name="keywords" content="御景家, 神明花, 敬神花, 花藝課程, 手作課程, 神明花報名">
+    <meta name="author" content="御景家 YUJINGJIA">
+
+    <!-- ═══ 社群分享標籤 Open Graph（LINE / FB 分享預覽） ═══ -->
+    <meta property="og:title" content="御景家＿神明花 | 基礎課程報名登記">
+    <meta property="og:description" content="專為零基礎設計的神明花手作課，名額限 5 位，點擊進入報名系統預約席次。">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&q=80&w=1200">
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
@@ -14,6 +27,7 @@
             --brand-gold: #D4B78F;
             --brand-gold-dark: #A38A6A;
             --brand-black: #0D0C0B;
+            --brand-gray: #161412;
             --brand-accent: #2A251B;
             --brand-text: #E8DCC4;
         }
@@ -21,168 +35,506 @@
             font-family: 'Noto Sans TC', sans-serif;
             background-color: var(--brand-black);
             color: var(--brand-text);
-            background-image: radial-gradient(circle at 2px 2px, rgba(212, 183, 143, 0.03) 1px, transparent 0);
-            background-size: 40px 40px;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
         }
-        /* 核心樣式：與輸入框完全一致的區塊風格 */
-        .premium-box {
-            background-color: rgba(23, 21, 18, 0.8) !important;
-            border: 1px solid var(--brand-accent) !important;
-            backdrop-filter: blur(5px);
-            transition: all 0.4s ease;
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .bg-pattern {
+            background-color: var(--brand-black);
+            background-image:
+                radial-gradient(circle at 2px 2px, rgba(212, 183, 143, 0.03) 1px, transparent 0),
+                radial-gradient(circle at 50% 50%, rgba(212, 183, 143, 0.05) 0%, transparent 50%);
+            background-size: 40px 40px, 100% 100%;
         }
-        .info-card:hover {
-            border-color: var(--brand-gold-dark) !important;
-            transform: translateY(-4px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        input {
+        input, select, textarea {
             background-color: rgba(23, 21, 18, 0.8) !important;
             border: 1px solid var(--brand-accent) !important;
             color: var(--brand-text) !important;
-            outline: none;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            backdrop-filter: blur(5px);
         }
-        input:focus { border-color: var(--brand-gold) !important; }
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--brand-gold) !important;
+            box-shadow: 0 0 15px rgba(212, 183, 143, 0.15) !important;
+            background-color: rgba(30, 27, 23, 1) !important;
+            outline: none;
+            transform: translateY(-1px);
+        }
+        input.field-error {
+            border-color: #8B0000 !important;
+            box-shadow: 0 0 8px rgba(139, 0, 0, 0.2) !important;
+        }
+        .error-msg {
+            color: #c0392b;
+            font-size: 0.7rem;
+            margin-top: 4px;
+            letter-spacing: 0.05em;
+            display: none;
+        }
+        .error-msg.visible { display: block; }
         .btn-gold {
+            position: relative;
             background: linear-gradient(135deg, var(--brand-gold) 0%, var(--brand-gold-dark) 100%);
             color: #12110F;
-            transition: all 0.3s;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            border: none;
         }
-        .btn-gold:hover { filter: brightness(1.1); letter-spacing: 0.2em; transform: translateY(-2px); }
-        .error-msg { color: #c0392b; font-size: 0.7rem; margin-top: 4px; display: none; }
-        .error-msg.visible { display: block; }
+        .btn-gold::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -60%;
+            width: 25%; height: 200%;
+            background: rgba(255,255,255,0.3);
+            transform: rotate(30deg);
+            transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .btn-gold:hover:not(:disabled) {
+            filter: brightness(1.1);
+            letter-spacing: 0.2em;
+            box-shadow: 0 15px 35px rgba(212, 183, 143, 0.25);
+            transform: translateY(-2px);
+        }
+        .btn-gold:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-spinner {
+            display: inline-block;
+            width: 14px; height: 14px;
+            border: 2px solid rgba(18,17,15,0.3);
+            border-top-color: #12110F;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .glass-panel {
+            background: rgba(22, 20, 18, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 183, 143, 0.1);
+            box-shadow: 0 40px 100px -20px rgba(0,0,0,0.7);
+        }
+        @keyframes borderGlow {
+            0%, 100% { border-color: rgba(212,183,143,0.5); box-shadow: 0 0 20px rgba(212,183,143,0.1); }
+            50%       { border-color: rgba(212,183,143,0.1); box-shadow: 0 0 5px rgba(212,183,143,0); }
+        }
+        .modal-glow { animation: borderGlow 4s infinite ease-in-out; }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeInUp { animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        input[type="checkbox"] {
+            width: 18px; height: 18px;
+            cursor: pointer;
+            accent-color: var(--brand-gold);
+        }
+        .tracking-premium { letter-spacing: 0.3em; }
+
+        /* 課程資訊靜態顯示框 */
+        .course-info-display {
+            background-color: rgba(23, 21, 18, 0.8);
+            border: 1px solid var(--brand-accent);
+            color: var(--brand-text);
+            border-radius: 0.75rem;
+            padding: 1rem 1.25rem;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+        }
     </style>
 </head>
-<body>
+<body class="bg-pattern min-h-screen">
 
-    <nav class="border-b border-[#2A251B]/50 p-6">
-        <div class="max-w-5xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-4">
-                <div class="w-9 h-9 border border-[#D4B78F] flex items-center justify-center rotate-45">
-                    <span class="-rotate-45 text-[#D4B78F] font-bold">御</span>
+    <!-- 導覽列 -->
+    <nav class="sticky top-0 z-50 bg-[#0D0C0B]/80 backdrop-blur-xl border-b border-[#2A251B]/50">
+        <div class="max-w-4xl mx-auto px-6 py-5 flex justify-between items-center">
+            <div class="flex items-center gap-4 group cursor-pointer">
+                <div class="w-9 h-9 rounded-sm border border-[#D4B78F]/40 flex items-center justify-center transition-all duration-700 group-hover:border-[#D4B78F] group-hover:rotate-45">
+                    <span class="text-[#D4B78F] font-serif font-bold text-lg group-hover:-rotate-45 transition-all duration-700">御</span>
                 </div>
-                <div>
-                    <h1 class="text-xl font-serif tracking-widest text-[#D4B78F]">御景家</h1>
-                    <p class="text-[8px] tracking-[0.3em] text-[#5C5547] uppercase">YUJINGJIA ART STUDIO</p>
+                <div class="flex flex-col">
+                    <h1 class="text-xl font-serif tracking-premium text-[#D4B78F]">御景家</h1>
+                    <span class="text-[8px] tracking-[0.4em] text-[#5C5547] uppercase -mt-1 font-light">YUJINGJIA ART STUDIO</span>
                 </div>
             </div>
-            <a href="https://line.me/ti/g/NPayXcjfUr" target="_blank" class="text-[10px] tracking-widest text-[#A39171] uppercase hover:text-[#D4B78F] transition-all">
-                <i class="fa-brands fa-line text-sm mr-1"></i> Join Line
-            </a>
+            <div class="flex gap-4 md:gap-6 text-[10px] md:text-xs tracking-[0.3em] text-[#A39171] uppercase font-light">
+                <a href="https://line.me/ti/g/NPayXcjfUr" target="_blank" rel="noopener noreferrer"
+                   class="hover:text-[#D4B78F] transition-all duration-300 flex items-center gap-2">
+                    <i class="fa-brands fa-line text-sm"></i> Join Community 加入群組
+                </a>
+            </div>
         </div>
     </nav>
 
-    <header class="py-16 text-center">
-        <div class="inline-block px-4 py-1 border border-[#D4B78F]/20 rounded-full text-[9px] tracking-[0.4em] text-[#A39171] mb-4 uppercase">Registration Form</div>
-        <h2 id="hero-title" class="text-3xl md:text-4xl font-serif tracking-[0.2em] text-[#D4B78F]">神明花基礎課程</h2>
+    <!-- 主視覺區 -->
+    <header class="relative h-[30vh] flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&q=80&w=1600')] bg-cover bg-center opacity-10 scale-110"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#0D0C0B]/80 to-[#0D0C0B]"></div>
+        <div class="relative text-center px-6 animate-fadeInUp">
+            <div class="inline-block px-4 py-1 border border-[#D4B78F]/20 rounded-full text-[9px] tracking-[0.4em] text-[#A39171] mb-4 uppercase">Exquisite Floral Class</div>
+            <!-- 課程名稱由 GAS 動態帶入 -->
+            <h2 id="hero-title" class="text-3xl md:text-4xl font-serif tracking-[0.25em] text-[#D4B78F] mb-4">神明花基礎課程</h2>
+            <div class="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#D4B78F]/40 to-transparent mx-auto"></div>
+        </div>
     </header>
 
-    <main class="max-w-5xl mx-auto px-6 pb-24">
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            <div class="premium-box info-card p-8 rounded-2xl">
-                <h3 class="text-[#D4B78F] font-bold text-sm tracking-widest mb-4">📌 課程說明</h3>
-                <p class="text-[11px] leading-loose text-[#A39171] font-light">
-                    本課程特別適合沒有手作經驗的學員。教學將從最基礎開始，步驟清楚、節奏輕鬆，即使是第一次接觸神明花，也能安心完成屬於自己的作品。
-                </p>
-            </div>
-            <div class="premium-box info-card p-8 rounded-2xl">
-                <h3 class="text-[#D4B78F] font-bold text-sm tracking-widest mb-4">📌 報名須知</h3>
-                <ul class="text-[11px] leading-loose text-[#A39171] font-light space-y-1">
-                    <li>1. 本課程為全天授課，依人數準備材料。</li>
-                    <li>2. 完成即保留名額，開課後恕不退費。</li>
-                    <li>3. 材料當日發放，未能出席者恕不補發。</li>
-                    <li>4. 取消請於開課前「三日」告知。</li>
-                </ul>
-            </div>
-            <div class="premium-box info-card p-8 rounded-2xl">
-                <h3 class="text-[#D4B78F] font-bold text-sm tracking-widest mb-4">📌 繳費方式</h3>
-                <div class="text-[11px] leading-loose text-[#A39171] font-light">
-                    <p>1. 本課程採 <span class="text-[#D4B78F] font-bold">現場現金繳費制</span>。</p>
-                    <p>2. 請於課程當天攜帶現金至現場完成繳費，感謝您的理解與配合。</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="premium-box rounded-[2.5rem] p-10 md:p-16">
-            <form id="bookingForm" novalidate class="space-y-10">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    <div class="space-y-3">
-                        <label class="text-[10px] tracking-widest text-[#8A8068] flex justify-between uppercase">姓名 / Name <span class="text-[#8B0000]">*</span></label>
-                        <input type="text" name="name" id="reg-name" required class="w-full px-5 py-4 rounded-xl text-sm" placeholder="請輸入姓名">
-                        <p class="error-msg" id="err-reg-name">請輸入姓名</p>
-                    </div>
-                    <div class="space-y-3">
-                        <label class="text-[10px] tracking-widest text-[#8A8068] flex justify-between uppercase">電話 / Phone <span class="text-[#8B0000]">*</span></label>
-                        <input type="tel" name="phone" id="reg-phone" required class="w-full px-5 py-4 rounded-xl text-sm" placeholder="09xxxxxxxx">
-                        <p class="error-msg" id="err-reg-phone">請輸入有效手機號碼</p>
-                    </div>
-                </div>
-
-                <div class="space-y-3">
-                    <label class="text-[10px] tracking-widest text-[#8A8068] uppercase">電子郵件 / Email</label>
-                    <input type="email" name="email" id="reg-email" required class="w-full px-5 py-4 rounded-xl text-sm" placeholder="用於寄送確認信">
-                    <p class="error-msg" id="err-reg-email">請輸入有效的 Email</p>
-                </div>
-
-                <div class="space-y-3">
-                    <label class="text-[10px] tracking-widest text-[#8A8068] uppercase">課程場次 / Course Info</label>
-                    <div id="course-display" class="w-full px-5 py-4 rounded-xl text-sm border border-[#2A251B] text-[#D4B78F] bg-[#0D0C0B]/50">載入中...</div>
-                    <input type="hidden" name="course" id="hidden-course">
-                </div>
-
-                <div class="pt-6 border-t border-[#2A251B]/50">
-                    <label class="flex items-start gap-4 cursor-pointer group">
-                        <input type="checkbox" id="reg-agreement" required class="mt-1 w-4 h-4 accent-[#D4B78F]">
-                        <span class="text-[11px] leading-relaxed text-[#A39171] group-hover:text-[#D4B78F] transition-colors">
-                            本人已閱讀並同意以上 <span class="text-[#D4B78F]">報名須知</span> 與 <span class="text-[#D4B78F]">繳費方式</span>，並承諾於當天現場繳費。
+    <main class="max-w-3xl mx-auto px-6 pb-24 relative z-10">
+        <div class="glass-panel rounded-3xl p-10 md:p-16 animate-fadeInUp">
+            <form id="bookingForm" novalidate class="space-y-12">
+                <section class="space-y-10">
+                    <div class="flex items-center gap-4 mb-2">
+                        <span class="text-[#D4B78F] font-serif text-2xl opacity-50 italic">Registration
+                            <span class="text-sm font-sans not-italic ml-2 opacity-80">填寫報名資料</span>
                         </span>
-                    </label>
-                    <p class="error-msg" id="err-reg-agreement">請勾選同意後再送出</p>
-                </div>
+                        <div class="h-[1px] flex-grow bg-gradient-to-r from-[#3A3225] to-transparent"></div>
+                    </div>
 
-                <button type="submit" id="submitBtn" class="w-full btn-gold py-6 rounded-2xl text-sm font-bold tracking-[0.5em] uppercase">
-                    確認提交報名
-                </button>
+                    <!-- 姓名 / 電話 -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <div class="space-y-3">
+                            <label class="text-[10px] tracking-[0.3em] text-[#8A8068] flex justify-between uppercase font-medium">
+                                <span>姓名 / Name</span>
+                                <span class="text-[#8B0000] opacity-80 font-bold tracking-widest">*必填</span>
+                            </label>
+                            <input type="text" name="name" id="reg-name" required autocomplete="name"
+                                class="w-full px-5 py-4 rounded-xl text-sm" placeholder="請輸入姓名">
+                            <p class="error-msg" id="err-reg-name">請輸入姓名</p>
+                        </div>
+                        <div class="space-y-3">
+                            <label class="text-[10px] tracking-[0.3em] text-[#8A8068] flex justify-between uppercase font-medium">
+                                <span>聯絡電話 / Phone</span>
+                                <span class="text-[#8B0000] opacity-80 font-bold tracking-widest">*必填</span>
+                            </label>
+                            <input type="tel" name="phone" id="reg-phone" required autocomplete="tel" inputmode="numeric"
+                                class="w-full px-5 py-4 rounded-xl text-sm" placeholder="09xxxxxxxx">
+                            <p class="error-msg" id="err-reg-phone">請輸入有效的手機號碼（09 開頭，共 10 碼）</p>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="space-y-3">
+                        <label class="text-[10px] tracking-[0.3em] text-[#8A8068] flex justify-between uppercase font-medium">
+                            <span>電子郵件 / Email</span>
+                            <span class="text-[#8B0000] opacity-80 font-bold tracking-widest">*必填</span>
+                        </label>
+                        <input type="email" name="email" id="reg-email" required autocomplete="email"
+                            class="w-full px-5 py-4 rounded-xl text-sm" placeholder="將用於寄送確認信與通知">
+                        <p class="error-msg" id="err-reg-email">請輸入有效的 Email 格式</p>
+                    </div>
+
+                    <!-- 課程資訊：動態顯示，不讓使用者自選 -->
+                    <div class="space-y-3">
+                        <label class="text-[10px] tracking-[0.3em] text-[#8A8068] uppercase font-medium">課程場次 / Course Info</label>
+                        <!-- 顯示用（純展示） -->
+                        <div id="course-display" class="course-info-display text-[#D4B78F]">載入中...</div>
+                        <!-- 隱藏欄位，傳送到 GAS（由 JS 自動填入） -->
+                        <input type="hidden" name="course" id="hidden-course">
+                    </div>
+
+                    <!-- 繳費同意 checkbox -->
+                    <div class="pt-6 border-t border-[#2A251B]/50">
+                        <label class="flex items-start gap-5 cursor-pointer group">
+                            <div class="mt-1">
+                                <!-- name="payment" value="現金繳費"：勾選後 GAS 收到「現金繳費」 -->
+                                <input type="checkbox" name="payment" id="reg-agreement" value="現金繳費" required class="ring-offset-black">
+                            </div>
+                            <div class="space-y-1">
+                                <span class="text-[11px] md:text-xs leading-relaxed text-[#A39171] group-hover:text-[#D4B78F] transition-colors duration-300 tracking-wider">
+                                    本人已閱讀並同意，本課程採 <span class="text-[#D4B78F]">課程當天現場現金繳費</span>，並同意依上述方式辦理相關費用事宜。
+                                </span>
+                                <div class="text-[9px] text-[#8B0000] opacity-80 font-bold uppercase tracking-[0.2em]">*必填 / Required</div>
+                            </div>
+                        </label>
+                        <p class="error-msg ml-10 mt-2" id="err-reg-agreement">請勾選同意後再送出</p>
+                    </div>
+                </section>
+
+                <div class="pt-8">
+                    <button type="submit" id="submitBtn" class="w-full btn-gold py-6 rounded-2xl text-sm font-bold tracking-[0.5em] uppercase shadow-2xl">
+                        確認提交報名
+                    </button>
+                    <p class="text-center text-[9px] text-[#3A3225] mt-6 tracking-widest">© YUJINGJIA ART STUDIO EST. 2024</p>
+                </div>
             </form>
         </div>
     </main>
 
+    <!-- ═══ 額滿彈窗 ═══ -->
+    <div id="full-modal" class="fixed inset-0 z-[100]" style="display:none;align-items:center;justify-content:center;padding:1.5rem">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-xl"></div>
+        <div class="bg-[#0D0C0B] border border-[#D4B78F]/30 rounded-[2rem] p-10 md:p-14 max-w-lg w-full relative shadow-[0_0_100px_rgba(0,0,0,1)] animate-fadeInUp modal-glow">
+            <button onclick="closeFullModal()" aria-label="關閉視窗"
+                class="absolute top-5 right-6 text-[#5C5547] hover:text-[#D4B78F] transition-colors duration-300 text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 bg-gradient-to-br from-[#D4B78F] to-[#A38A6A] rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg">
+                    <i class="fa-solid fa-bell text-[#12110F] text-2xl"></i>
+                </div>
+                <h3 class="text-2xl md:text-3xl font-serif text-[#D4B78F] mb-6 tracking-[0.2em]">本場次報名已額滿</h3>
+            </div>
+            <div class="text-[#A39171] text-sm md:text-base font-light leading-loose text-left space-y-4 mb-8">
+                <p class="text-[#E8DCC4] border-b border-[#2A251B] pb-3">目前本場次報名已額滿，感謝你的關注與支持 🙏</p>
+                <p>如果你願意留下聯絡資訊，我們可以為你保留候補資格：</p>
+                <ul class="space-y-2 opacity-90">
+                    <li class="flex items-start gap-3"><span class="text-[#D4B78F]">✦</span><span>一旦有名額釋出，將依序通知你遞補</span></li>
+                    <li class="flex items-start gap-3"><span class="text-[#D4B78F]">✦</span><span>下次開課或相關活動開放時，優先寄送通知給你</span></li>
+                </ul>
+                <p class="text-[#5C5547] text-xs">期待有機會與你見面，謝謝你的耐心等候。</p>
+            </div>
+            <form id="waitlistForm" novalidate class="space-y-5">
+                <div class="space-y-3">
+                    <label class="text-[10px] tracking-[0.3em] text-[#8A8068] uppercase font-medium">姓名 / Name <span class="text-[#8B0000]">*</span></label>
+                    <input type="text" name="name" id="wl-name" required autocomplete="name"
+                        class="w-full px-5 py-4 rounded-xl text-sm" placeholder="請輸入姓名">
+                    <p class="error-msg" id="err-wl-name">請輸入姓名</p>
+                </div>
+                <div class="space-y-3">
+                    <label class="text-[10px] tracking-[0.3em] text-[#8A8068] uppercase font-medium">聯絡電話 / Phone <span class="text-[#8B0000]">*</span></label>
+                    <input type="tel" name="phone" id="wl-phone" required autocomplete="tel" inputmode="numeric"
+                        class="w-full px-5 py-4 rounded-xl text-sm" placeholder="09xxxxxxxx">
+                    <p class="error-msg" id="err-wl-phone">請輸入有效的手機號碼（09 開頭，共 10 碼）</p>
+                </div>
+                <div class="space-y-3">
+                    <label class="text-[10px] tracking-[0.3em] text-[#8A8068] uppercase font-medium">電子郵件 / Email <span class="text-[#8B0000]">*</span></label>
+                    <input type="email" name="email" id="wl-email" required autocomplete="email"
+                        class="w-full px-5 py-4 rounded-xl text-sm" placeholder="接收通知使用">
+                    <p class="error-msg" id="err-wl-email">請輸入有效的 Email 格式</p>
+                </div>
+                <input type="hidden" name="type" value="候補名單">
+                <button type="submit" id="waitlistBtn" class="w-full btn-gold py-5 rounded-2xl text-sm font-bold tracking-[0.5em] uppercase shadow-2xl mt-2">
+                    登記候補資格
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ═══ 成功 / 候補 結果彈窗 ═══ -->
+    <div id="success-modal" class="fixed inset-0 z-[100]" style="display:none;align-items:center;justify-content:center;padding:1.5rem">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-xl"></div>
+        <div class="bg-[#0D0C0B] border border-[#D4B78F]/30 rounded-[2rem] p-10 md:p-14 max-w-lg w-full relative text-center shadow-[0_0_100px_rgba(0,0,0,1)] animate-fadeInUp modal-glow">
+            <div class="w-20 h-20 bg-gradient-to-br from-[#D4B78F] to-[#A38A6A] rounded-full flex items-center justify-center mx-auto mb-10 shadow-lg">
+                <i id="modalIcon" class="fa-solid fa-check text-[#12110F] text-2xl"></i>
+            </div>
+            <h3 id="modalTitle" class="text-2xl md:text-3xl font-serif text-[#D4B78F] mb-6 tracking-[0.2em]">報名已受理</h3>
+            <div id="modalDesc" class="text-[#A39171] text-sm md:text-base font-light leading-loose mb-12 text-left space-y-4"></div>
+            <button id="closeModalBtn" onclick="location.reload()"
+                class="w-full py-5 btn-gold rounded-xl tracking-[0.4em] text-xs font-bold uppercase">
+                確認
+            </button>
+        </div>
+    </div>
+
     <script>
     (() => {
+        'use strict';
+
+        // ─── 設定區（只需修改這裡）─────────────────────────────────
         const CONFIG = {
-            scriptURL: 'https://script.google.com/macros/s/AKfycbzmaY1fimFJhYvEzWbAzyTBZUJ3DRSGV4GRzE56QaeOivTNvByfnbtGjCQNx8DVtsob/exec',
-            actions: { CHECK_FULL: 'checkFull', REGISTER: 'register' }
+            // ⚠️ 重新部署後換成新的網址
+            scriptURL: 'https://script.google.com/macros/s/AKfycbx0ZtWwShCgCMZYiEP3DCspfq-KXgx8l0fR9nC2xXbLzgVFCY0YuqFCN-VDowr-rYpt/exec',
+            actions: {
+                CHECK_FULL: 'checkFull',
+                REGISTER:   'register',
+                WAITLIST:   'waitlist'
+            }
         };
 
+        // ─── 驗證工具 ────────────────────────────────────────────────
+        const Validator = {
+            isEmail:  v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
+            isPhone:  v => /^09\d{8}$/.test(v.trim().replace(/[-\s]/g, '')),
+            notEmpty: v => v.trim().length > 0,
+
+            showError(fieldId, errId) {
+                document.getElementById(fieldId)?.classList.add('field-error');
+                document.getElementById(errId)?.classList.add('visible');
+            },
+            clearError(fieldId, errId) {
+                document.getElementById(fieldId)?.classList.remove('field-error');
+                document.getElementById(errId)?.classList.remove('visible');
+            },
+
+            validateRegForm() {
+                let ok = true;
+                const name  = document.getElementById('reg-name').value;
+                const phone = document.getElementById('reg-phone').value;
+                const email = document.getElementById('reg-email').value;
+                const agree = document.getElementById('reg-agreement').checked;
+
+                if (!this.notEmpty(name)) { this.showError('reg-name',  'err-reg-name');  ok = false; }
+                else                      { this.clearError('reg-name', 'err-reg-name'); }
+
+                if (!this.isPhone(phone)) { this.showError('reg-phone',  'err-reg-phone');  ok = false; }
+                else                      { this.clearError('reg-phone', 'err-reg-phone'); }
+
+                if (!this.isEmail(email)) { this.showError('reg-email',  'err-reg-email');  ok = false; }
+                else                      { this.clearError('reg-email', 'err-reg-email'); }
+
+                if (!agree) { this.showError('reg-agreement', 'err-reg-agreement'); ok = false; }
+                else        { this.clearError('reg-agreement', 'err-reg-agreement'); }
+
+                return ok;
+            },
+
+            validateWaitlistForm() {
+                let ok = true;
+                const name  = document.getElementById('wl-name').value;
+                const phone = document.getElementById('wl-phone').value;
+                const email = document.getElementById('wl-email').value;
+
+                if (!this.notEmpty(name)) { this.showError('wl-name',  'err-wl-name');  ok = false; }
+                else                      { this.clearError('wl-name', 'err-wl-name'); }
+
+                if (!this.isPhone(phone)) { this.showError('wl-phone',  'err-wl-phone');  ok = false; }
+                else                      { this.clearError('wl-phone', 'err-wl-phone'); }
+
+                if (!this.isEmail(email)) { this.showError('wl-email',  'err-wl-email');  ok = false; }
+                else                      { this.clearError('wl-email', 'err-wl-email'); }
+
+                return ok;
+            }
+        };
+
+        // ─── UI 工具 ─────────────────────────────────────────────────
+        const UI = {
+            showModal(id) {
+                document.getElementById(id).style.display = 'flex';
+            },
+            hideModal(id) {
+                document.getElementById(id).style.display = 'none';
+            },
+            setBtnLoading(btn, loading, defaultText) {
+                btn.disabled = loading;
+                btn.innerHTML = loading
+                    ? `<span class="btn-spinner"></span>處理中...`
+                    : defaultText;
+            },
+            showResult({ title, desc, icon }) {
+                document.getElementById('modalTitle').innerText = title;
+                document.getElementById('modalDesc').innerHTML  = desc;
+                document.getElementById('modalIcon').className  = icon;
+                this.showModal('success-modal');
+            }
+        };
+
+        // ─── API 工具 ────────────────────────────────────────────────
+        const Api = {
+            async checkFull() {
+                const res = await fetch(`${CONFIG.scriptURL}?action=${CONFIG.actions.CHECK_FULL}`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return res.json();
+            },
+            async post(formData) {
+                const res = await fetch(CONFIG.scriptURL, { method: 'POST', body: formData });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return res.json();
+            }
+        };
+
+        // ─── 頁面載入：檢查名額 + 動態帶入課程資訊 ─────────────────
         window.addEventListener('DOMContentLoaded', async () => {
             try {
-                const res = await fetch(`${CONFIG.scriptURL}?action=${CONFIG.actions.CHECK_FULL}`);
-                const data = await res.json();
-                const info = `${data.courseName} ｜ ${data.courseDate} ｜ NT$ ${data.coursePrice}`;
-                document.getElementById('course-display').textContent = info;
-                document.getElementById('hidden-course').value = info;
-                if(data.courseName) document.getElementById('hero-title').innerText = data.courseName;
-            } catch (e) { console.error(e); }
-        });
+                const data = await Api.checkFull();
 
-        document.getElementById('bookingForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('submitBtn');
-            btn.disabled = true; btn.innerText = '處理中...';
-            
-            try {
-                const fd = new FormData(e.target);
-                fd.append('action', CONFIG.actions.REGISTER);
-                const res = await fetch(CONFIG.scriptURL, { method: 'POST', body: fd });
-                const data = await res.json();
-                alert(data.status === '✅正取' ? '報名成功！請檢查信箱。' : '名額已滿，已為您列入候補。');
-                location.reload();
-            } catch (err) {
-                alert('提交失敗，請檢查網路。');
-                btn.disabled = false; btn.innerText = '確認提交報名';
+                // 動態更新課程資訊顯示
+                const courseText = `${data.courseName}｜${data.courseDate}｜${data.coursePrice}`;
+                const display = document.getElementById('course-display');
+                const hidden  = document.getElementById('hidden-course');
+                if (display) display.textContent = courseText;
+                if (hidden)  hidden.value = courseText;
+
+                // 動態更新頁面標題
+                const heroTitle = document.getElementById('hero-title');
+                if (heroTitle && data.courseName) heroTitle.textContent = data.courseName;
+
+                // 如果額滿，顯示額滿彈窗
+                if (data.isFull) UI.showModal('full-modal');
+
+            } catch (e) {
+                // 查詢失敗靜默處理，不阻擋使用者填表
+                console.warn('[checkFull] 無法取得名額狀態，跳過檢查。', e.message);
+                const display = document.getElementById('course-display');
+                if (display) display.textContent = '神明花基礎課程（課程資訊載入中）';
             }
         });
+
+        // ─── 關閉額滿彈窗 ────────────────────────────────────────────
+        window.closeFullModal = () => UI.hideModal('full-modal');
+
+        // ─── 候補表單提交 ─────────────────────────────────────────────
+        const waitlistForm = document.getElementById('waitlistForm');
+        const waitlistBtn  = document.getElementById('waitlistBtn');
+        let waitlistSubmitting = false;
+
+        waitlistForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (waitlistSubmitting) return;
+            if (!Validator.validateWaitlistForm()) return;
+
+            waitlistSubmitting = true;
+            UI.setBtnLoading(waitlistBtn, true, '登記候補資格');
+
+            const fd = new FormData(waitlistForm);
+            fd.append('action', CONFIG.actions.WAITLIST);
+
+            try {
+                await Api.post(fd);
+                UI.hideModal('full-modal');
+                UI.showResult({
+                    title: '已列入候補',
+                    desc:  '<p class="text-center">系統已將您列入候補名單，確認信已寄至您的信箱。<br>如有名額釋出將依序優先通知您。</p>',
+                    icon:  'fa-solid fa-envelope-open-text text-[#12110F] text-2xl'
+                });
+                waitlistForm.reset();
+            } catch (err) {
+                console.error('[waitlist] 送出失敗', err.message);
+                alert('送出失敗，請檢查網路或聯繫官方 LINE。');
+                UI.setBtnLoading(waitlistBtn, false, '登記候補資格');
+            } finally {
+                waitlistSubmitting = false;
+            }
+        });
+
+        // ─── 正式報名表單提交 ─────────────────────────────────────────
+        const bookingForm = document.getElementById('bookingForm');
+        const submitBtn   = document.getElementById('submitBtn');
+        let regSubmitting = false;
+
+        bookingForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (regSubmitting) return;
+            if (!Validator.validateRegForm()) return;
+
+            regSubmitting = true;
+            UI.setBtnLoading(submitBtn, true, '確認提交報名');
+
+            const fd = new FormData(bookingForm);
+            fd.append('action', CONFIG.actions.REGISTER);
+
+            try {
+                const data = await Api.post(fd);
+                if (data.status === '🔸備取') {
+                    UI.showResult({
+                        title: '候補登記成功',
+                        desc:  '<p class="text-center">您已列入候補名單，候補確認信已寄至您的信箱。<br>一旦有名額釋出將依序優先通知您。</p>',
+                        icon:  'fa-solid fa-envelope-open-text text-[#12110F] text-2xl'
+                    });
+                } else {
+                    UI.showResult({
+                        title: '報名正式成功',
+                        desc:  '<p class="text-center">恭喜您成功報名！確認信已寄發，名額已為您保留。<br>請於當天攜帶現金至現場繳費。</p>',
+                        icon:  'fa-solid fa-check text-[#12110F] text-2xl'
+                    });
+                }
+            } catch (err) {
+                console.error('[register] 送出失敗', err.message);
+                alert('提交失敗，請檢查網路或聯繫官方 LINE。');
+                UI.setBtnLoading(submitBtn, false, '確認提交報名');
+            } finally {
+                regSubmitting = false;
+            }
+        });
+
     })();
     </script>
 </body>
