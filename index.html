@@ -12,7 +12,119 @@
         body { font-family: 'Noto Sans TC', sans-serif; background-color: var(--brand-black); color: var(--brand-text); }
         .glass-panel { background: rgba(22, 20, 18, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(212, 183, 143, 0.1); }
         .info-box { border-left: 2px solid var(--brand-gold); background: rgba(212, 183, 143, 0.05); padding: 1.5rem; border-radius: 0 1rem 1rem 0; }
+        .btn-gold { background: linear-gradient(135deg, var(--brand-gold) 0%, var(--brand-gold-dark<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>御景家＿神明花 | 課程報名</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root { --brand-gold: #D4B78F; --brand-gold-dark: #A38A6A; --brand-black: #0D0C0B; --brand-text: #E8DCC4; }
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: var(--brand-black); color: var(--brand-text); }
+        .glass-panel { background: rgba(22, 20, 18, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(212, 183, 143, 0.1); }
+        .info-box { border-left: 2px solid var(--brand-gold); background: rgba(212, 183, 143, 0.05); padding: 1.5rem; border-radius: 0 1rem 1rem 0; }
         .btn-gold { background: linear-gradient(135deg, var(--brand-gold) 0%, var(--brand-gold-dark) 100%); color: #12110F; transition: all 0.3s; }
+        .btn-gold:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(212, 183, 143, 0.2); }
+        input, select { background: rgba(23, 21, 18, 0.8) !important; border: 1px solid #2A251B !important; color: white !important; }
+        .error-msg { color: #ff4d4d; font-size: 0.75rem; display: none; margin-top: 0.25rem; }
+        .error-msg.visible { display: block; }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <nav class="p-6 border-b border-[#2A251B]">
+        <div class="max-w-4xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 border border-[#D4B78F] flex items-center justify-center rotate-45"><span class="-rotate-45 text-[#D4B78F] font-bold">御</span></div>
+                <h1 class="text-xl tracking-widest text-[#D4B78F] font-serif">御景家</h1>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-3xl mx-auto px-6 py-12">
+        <div class="glass-panel rounded-3xl p-8 md:p-12 space-y-10">
+            
+            <section class="space-y-4">
+                <h2 class="text-[#D4B78F] text-lg font-bold flex items-center gap-2">
+                    <i class="fa-solid fa-leaf"></i> 課程說明
+                </h2>
+                <p class="text-sm leading-relaxed text-[#A39171] font-light">
+                    本課程特別適合沒有手作經驗的學員。教學將從最基礎開始，步驟清楚、節奏輕鬆，即使是第一次接觸神明花／敬神花，也能安心完成屬於自己的作品。
+                </p>
+            </section>
+
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="info-box space-y-3">
+                    <h3 class="text-[#D4B78F] text-sm font-bold tracking-widest">📌 報名須知</h3>
+                    <ul class="text-[11px] text-[#A39171] space-y-2 font-light">
+                        <li>1. 全天授課，依人數準備練習材料。</li>
+                        <li>2. 完成即保留名額，開課後恕不退費。</li>
+                        <li>3. 材料當日發放，未出席者恕不補發。</li>
+                        <li>4. 取消請於開課前「三日」告知。</li>
+                    </ul>
+                </div>
+                <div class="info-box space-y-3">
+                    <h3 class="text-[#D4B78F] text-sm font-bold tracking-widest">📌 繳費方式</h3>
+                    <p class="text-[11px] text-[#A39171] leading-relaxed font-light">
+                        本課程採 <span class="text-[#D4B78F] font-bold">現場現金繳費制</span>。<br>
+                        請於課程當天攜帶現金至現場完成繳費，感謝您的配合。
+                    </p>
+                </div>
+            </section>
+
+            <hr class="border-[#2A251B]">
+
+            <form id="bookingForm" class="space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="text-xs text-[#8A8068] tracking-widest uppercase">姓名 / Name</label>
+                        <input type="text" id="reg-name" name="name" required class="w-full p-4 rounded-xl text-sm" placeholder="請輸入姓名">
+                        <p class="error-msg" id="err-reg-name">請填寫姓名</p>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs text-[#8A8068] tracking-widest uppercase">電話 / Phone</label>
+                        <input type="tel" id="reg-phone" name="phone" required class="w-full p-4 rounded-xl text-sm" placeholder="09xxxxxxxx">
+                        <p class="error-msg" id="err-reg-phone">請填寫有效電話</p>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-xs text-[#8A8068] tracking-widest uppercase">電子郵件 / Email</label>
+                    <input type="email" id="reg-email" name="email" required class="w-full p-4 rounded-xl text-sm" placeholder="接收確認信用">
+                    <p class="error-msg" id="err-reg-email">請填寫正確 Email</p>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-xs text-[#8A8068] tracking-widest uppercase">選擇場次 / Course</label>
+                    <div id="course-display" class="w-full p-4 rounded-xl text-sm bg-[#171512] border border-[#2A251B] text-[#D4B78F]">載入中...</div>
+                    <input type="hidden" id="hidden-course" name="course">
+                </div>
+
+                <div class="pt-4">
+                    <label class="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" id="reg-agreement" required class="mt-1">
+                        <span class="text-[11px] text-[#A39171] leading-relaxed">
+                            本人已閱讀並同意以上 <span class="text-[#D4B78F]">報名須知</span> 與 <span class="text-[#D4B78F]">繳費方式</span>，並承諾於當天現場繳費。
+                        </span>
+                    </label>
+                    <p class="error-msg" id="err-reg-agreement">請勾選同意</p>
+                </div>
+
+                <button type="submit" id="submitBtn" class="w-full btn-gold py-5 rounded-2xl font-bold tracking-[0.5em] text-sm uppercase">
+                    提交報名資料
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        // (此處請使用上一回合提供的 CONFIG 與 Script 邏輯，網址請記得換成你的最新的那個)
+    </script>
+</body>
+</html>) 100%); color: #12110F; transition: all 0.3s; }
         .btn-gold:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(212, 183, 143, 0.2); }
         input, select { background: rgba(23, 21, 18, 0.8) !important; border: 1px solid #2A251B !important; color: white !important; }
         .error-msg { color: #ff4d4d; font-size: 0.75rem; display: none; margin-top: 0.25rem; }
