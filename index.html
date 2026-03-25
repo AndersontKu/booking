@@ -4,13 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- ═══ SEO 基本設定 ═══ -->
     <title>御景家＿神明花 | 神明花基礎課程報名</title>
     <meta name="description" content="御景家＿神明花基礎課程正式開放報名。專為零基礎學員設計，由淺入深教學，親手完成精緻敬神花藝。立即預約名額。">
     <meta name="keywords" content="御景家, 神明花, 敬神花, 花藝課程, 手作課程, 神明花報名">
     <meta name="author" content="御景家 YUJINGJIA">
 
-    <!-- ═══ 社群分享標籤 Open Graph（LINE / FB 分享預覽） ═══ -->
     <meta property="og:title" content="御景家＿神明花 | 基礎課程報名登記">
     <meta property="og:description" content="專為零基礎設計的神明花手作課，名額限 5 位，點擊進入報名系統預約席次。">
     <meta property="og:type" content="website">
@@ -144,7 +142,6 @@
 </head>
 <body class="bg-pattern min-h-screen">
 
-    <!-- 導覽列 -->
     <nav class="sticky top-0 z-50 bg-[#0D0C0B]/80 backdrop-blur-xl border-b border-[#2A251B]/50">
         <div class="max-w-4xl mx-auto px-6 py-5 flex justify-between items-center">
             <div class="flex items-center gap-4 group cursor-pointer">
@@ -165,13 +162,11 @@
         </div>
     </nav>
 
-    <!-- 主視覺區 -->
     <header class="relative h-[30vh] flex items-center justify-center overflow-hidden">
         <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&q=80&w=1600')] bg-cover bg-center opacity-10 scale-110"></div>
         <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#0D0C0B]/80 to-[#0D0C0B]"></div>
         <div class="relative text-center px-6 animate-fadeInUp">
             <div class="inline-block px-4 py-1 border border-[#D4B78F]/20 rounded-full text-[9px] tracking-[0.4em] text-[#A39171] mb-4 uppercase">Exquisite Floral Class</div>
-            <!-- 課程名稱由 GAS 動態帶入 -->
             <h2 id="hero-title" class="text-3xl md:text-4xl font-serif tracking-[0.25em] text-[#D4B78F] mb-4">神明花基礎課程</h2>
             <div class="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#D4B78F]/40 to-transparent mx-auto"></div>
         </div>
@@ -188,7 +183,6 @@
                         <div class="h-[1px] flex-grow bg-gradient-to-r from-[#3A3225] to-transparent"></div>
                     </div>
 
-                    <!-- 姓名 / 電話 -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                         <div class="space-y-3">
                             <label class="text-[10px] tracking-[0.3em] text-[#8A8068] flex justify-between uppercase font-medium">
@@ -210,7 +204,6 @@
                         </div>
                     </div>
 
-                    <!-- Email -->
                     <div class="space-y-3">
                         <label class="text-[10px] tracking-[0.3em] text-[#8A8068] flex justify-between uppercase font-medium">
                             <span>電子郵件 / Email</span>
@@ -221,20 +214,15 @@
                         <p class="error-msg" id="err-reg-email">請輸入有效的 Email 格式</p>
                     </div>
 
-                    <!-- 課程資訊：動態顯示，不讓使用者自選 -->
                     <div class="space-y-3">
                         <label class="text-[10px] tracking-[0.3em] text-[#8A8068] uppercase font-medium">課程場次 / Course Info</label>
-                        <!-- 顯示用（純展示） -->
                         <div id="course-display" class="course-info-display text-[#D4B78F]">載入中...</div>
-                        <!-- 隱藏欄位，傳送到 GAS（由 JS 自動填入） -->
                         <input type="hidden" name="course" id="hidden-course">
                     </div>
 
-                    <!-- 繳費同意 checkbox -->
                     <div class="pt-6 border-t border-[#2A251B]/50">
                         <label class="flex items-start gap-5 cursor-pointer group">
                             <div class="mt-1">
-                                <!-- name="payment" value="現金繳費"：勾選後 GAS 收到「現金繳費」 -->
                                 <input type="checkbox" name="payment" id="reg-agreement" value="現金繳費" required class="ring-offset-black">
                             </div>
                             <div class="space-y-1">
@@ -258,7 +246,6 @@
         </div>
     </main>
 
-    <!-- ═══ 額滿彈窗 ═══ -->
     <div id="full-modal" class="fixed inset-0 z-[100]" style="display:none;align-items:center;justify-content:center;padding:1.5rem">
         <div class="absolute inset-0 bg-black/90 backdrop-blur-xl"></div>
         <div class="bg-[#0D0C0B] border border-[#D4B78F]/30 rounded-[2rem] p-10 md:p-14 max-w-lg w-full relative shadow-[0_0_100px_rgba(0,0,0,1)] animate-fadeInUp modal-glow">
@@ -308,7 +295,6 @@
         </div>
     </div>
 
-    <!-- ═══ 成功 / 候補 結果彈窗 ═══ -->
     <div id="success-modal" class="fixed inset-0 z-[100]" style="display:none;align-items:center;justify-content:center;padding:1.5rem">
         <div class="absolute inset-0 bg-black/90 backdrop-blur-xl"></div>
         <div class="bg-[#0D0C0B] border border-[#D4B78F]/30 rounded-[2rem] p-10 md:p-14 max-w-lg w-full relative text-center shadow-[0_0_100px_rgba(0,0,0,1)] animate-fadeInUp modal-glow">
@@ -330,8 +316,8 @@
 
         // ─── 設定區（只需修改這裡）─────────────────────────────────
         const CONFIG = {
-            // ⚠️ 重新部署後換成新的網址
-            scriptURL: 'https://script.google.com/macros/s/AKfycbx0ZtWwShCgCMZYiEP3DCspfq-KXgx8l0fR9nC2xXbLzgVFCY0YuqFCN-VDowr-rYpt/exec',
+            // ✅ 已經替換為你最新的 Google Apps Script 部署網址
+            scriptURL: 'https://script.google.com/macros/s/AKfycbzmaY1fimFJhYvEzWbAzyTBZUJ3DRSGV4GRzE56QaeOivTNvByfnbtGjCQNx8DVtsob/exec',
             actions: {
                 CHECK_FULL: 'checkFull',
                 REGISTER:   'register',
