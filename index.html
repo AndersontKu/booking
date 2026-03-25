@@ -3,12 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- SEO 基本設定 -->
+
+    <!-- ═══ SEO 基本設定 ═══ -->
     <title>御景家＿神明花 | 神明花基礎課程報名</title>
     <meta name="description" content="御景家＿神明花基礎課程正式開放報名。專為零基礎學員設計，由淺入深教學，親手完成精緻敬神花藝。立即預約名額。">
     <meta name="keywords" content="御景家, 神明花, 敬神花, 花藝課程, 手作課程, 神明花報名">
     <meta name="author" content="御景家 YUJINGJIA">
+
+    <!-- ═══ 社群分享標籤 Open Graph（LINE / FB 分享預覽） ═══ -->
+    <meta property="og:title" content="御景家＿神明花 | 基礎課程報名登記">
+    <meta property="og:description" content="專為零基礎設計的神明花手作課，名額限 5 位，點擊進入報名系統預約席次。">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&q=80&w=1200">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -60,6 +66,20 @@
             transform: translateY(-1px);
         }
 
+        /* 驗證錯誤樣式 */
+        input.field-error {
+            border-color: #8B0000 !important;
+            box-shadow: 0 0 8px rgba(139, 0, 0, 0.2) !important;
+        }
+        .error-msg {
+            color: #c0392b;
+            font-size: 0.7rem;
+            margin-top: 4px;
+            letter-spacing: 0.05em;
+            display: none;
+        }
+        .error-msg.visible { display: block; }
+
         .btn-gold {
             position: relative;
             background: linear-gradient(135deg, var(--brand-gold) 0%, var(--brand-gold-dark) 100%);
@@ -87,6 +107,25 @@
             box-shadow: 0 15px 35px rgba(212, 183, 143, 0.25);
             transform: translateY(-2px);
         }
+
+        .btn-gold:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* 按鈕內 loading spinner */
+        .btn-spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(18, 17, 15, 0.3);
+            border-top-color: #12110F;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         .glass-panel {
             background: rgba(22, 20, 18, 0.7);
@@ -134,7 +173,9 @@
                 </div>
             </div>
             <div class="flex gap-4 md:gap-6 text-[10px] md:text-xs tracking-[0.3em] text-[#A39171] uppercase font-light">
-                <a href="https://line.me/ti/g/NPayXcjfUr" target="_blank" class="hover:text-[#D4B78F] transition-all duration-300 flex items-center gap-2">
+                <!-- rel="noopener noreferrer" 為外連安全標準做法 -->
+                <a href="https://line.me/ti/g/NPayXcjfUr" target="_blank" rel="noopener noreferrer"
+                   class="hover:text-[#D4B78F] transition-all duration-300 flex items-center gap-2">
                     <i class="fa-brands fa-line text-sm"></i> Join Community 加入群組
                 </a>
             </div>
@@ -155,7 +196,7 @@
     <main class="max-w-3xl mx-auto px-6 pb-24 relative z-10">
         <!-- 報名表單 -->
         <div class="glass-panel rounded-3xl p-10 md:p-16 animate-fadeInUp">
-            <form id="bookingForm" class="space-y-12">
+            <form id="bookingForm" novalidate class="space-y-12">
                 <section class="space-y-10">
                     <div class="flex items-center gap-4 mb-2">
                         <span class="text-[#D4B78F] font-serif text-2xl opacity-50 italic">Registration <span class="text-sm font-sans not-italic ml-2 opacity-80">填寫報名資料</span></span>
@@ -163,41 +204,52 @@
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                        <div class="space-y-4">
+                        <div class="space-y-3">
                             <label class="text-[10px] tracking-[0.3em] text-[#8A8068] flex justify-between uppercase font-medium">
                                 <span>姓名 / Name</span>
                                 <span class="text-[#8B0000] opacity-80 font-bold tracking-widest">*必填</span>
                             </label>
-                            <input type="text" name="name" required class="w-full px-5 py-4 rounded-xl text-sm" placeholder="請輸入姓名">
+                            <input type="text" name="name" id="reg-name" required autocomplete="name"
+                                class="w-full px-5 py-4 rounded-xl text-sm" placeholder="請輸入姓名">
+                            <p class="error-msg" id="err-reg-name">請輸入姓名</p>
                         </div>
-                        <div class="space-y-4">
+                        <div class="space-y-3">
                             <label class="text-[10px] tracking-[0.3em] text-[#8A8068] flex justify-between uppercase font-medium">
                                 <span>聯絡電話 / Phone</span>
                                 <span class="text-[#8B0000] opacity-80 font-bold tracking-widest">*必填</span>
                             </label>
-                            <input type="tel" name="phone" required class="w-full px-5 py-4 rounded-xl text-sm" placeholder="請輸入聯絡電話">
+                            <input type="tel" name="phone" id="reg-phone" required autocomplete="tel" inputmode="numeric"
+                                class="w-full px-5 py-4 rounded-xl text-sm" placeholder="09xxxxxxxx">
+                            <p class="error-msg" id="err-reg-phone">請輸入有效的手機號碼（09 開頭，共 10 碼）</p>
                         </div>
                     </div>
 
-                    <div class="space-y-4">
+                    <div class="space-y-3">
                         <label class="text-[10px] tracking-[0.3em] text-[#8A8068] flex justify-between uppercase font-medium">
                             <span>電子郵件 / Email</span>
                             <span class="text-[#8B0000] opacity-80 font-bold tracking-widest">*必填</span>
                         </label>
-                        <input type="email" name="email" required class="w-full px-5 py-4 rounded-xl text-sm" placeholder="將用於寄送確認信與通知">
+                        <input type="email" name="email" id="reg-email" required autocomplete="email"
+                            class="w-full px-5 py-4 rounded-xl text-sm" placeholder="將用於寄送確認信與通知">
+                        <p class="error-msg" id="err-reg-email">請輸入有效的 Email 格式</p>
                     </div>
 
-                    <div class="space-y-4">
+                    <div class="space-y-3">
                         <label class="text-[10px] tracking-[0.3em] text-[#8A8068] uppercase font-medium">課程名稱 / Course Selection</label>
-                        <select name="course" required class="w-full px-5 py-4 rounded-xl text-sm appearance-none cursor-pointer">
-                            <option value="神明花基礎課程｜2/25（日）｜$4,880" selected>神明花基礎課程｜2/25（日）｜$4,880</option>
-                        </select>
+                        <div class="relative">
+                            <select name="course" required class="w-full px-5 py-4 rounded-xl text-sm appearance-none cursor-pointer pr-10">
+                                <option value="神明花基礎課程｜2/25（日）｜$4,880" selected>神明花基礎課程｜2/25（日）｜$4,880</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-4 flex items-center text-[#8A8068]">
+                                <i class="fa-solid fa-chevron-down text-xs"></i>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="pt-6 border-t border-[#2A251B]/50">
                         <label class="flex items-start gap-5 cursor-pointer group">
                             <div class="mt-1">
-                                <input type="checkbox" name="agreement" required class="ring-offset-black">
+                                <input type="checkbox" name="agreement" id="reg-agreement" required class="ring-offset-black">
                             </div>
                             <div class="space-y-1">
                                 <span class="text-[11px] md:text-xs leading-relaxed text-[#A39171] group-hover:text-[#D4B78F] transition-colors duration-300 tracking-wider">
@@ -206,6 +258,7 @@
                                 <div class="text-[9px] text-[#8B0000] opacity-80 font-bold uppercase tracking-[0.2em]">*必填 / Required</div>
                             </div>
                         </label>
+                        <p class="error-msg ml-10 mt-2" id="err-reg-agreement">請勾選同意後再送出</p>
                     </div>
                 </section>
 
@@ -219,8 +272,63 @@
         </div>
     </main>
 
-    <!-- 成功/候補彈窗 -->
-    <div id="success-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-6">
+    <!-- ═══ 額滿彈窗 ═══ -->
+    <div id="full-modal" class="fixed inset-0 z-[100] hidden" style="display:none;align-items:center;justify-content:center;padding:1.5rem">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-xl"></div>
+        <div class="bg-[#0D0C0B] border border-[#D4B78F]/30 rounded-[2rem] p-10 md:p-14 max-w-lg w-full relative shadow-[0_0_100px_rgba(0,0,0,1)] animate-fadeInUp modal-glow">
+
+            <!-- 關閉按鈕 -->
+            <button onclick="closeFullModal()" aria-label="關閉視窗"
+                class="absolute top-5 right-6 text-[#5C5547] hover:text-[#D4B78F] transition-colors duration-300 text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 bg-gradient-to-br from-[#D4B78F] to-[#A38A6A] rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg">
+                    <i class="fa-solid fa-bell text-[#12110F] text-2xl"></i>
+                </div>
+                <h3 class="text-2xl md:text-3xl font-serif text-[#D4B78F] mb-6 tracking-[0.2em]">本場次報名已額滿</h3>
+            </div>
+
+            <div class="text-[#A39171] text-sm md:text-base font-light leading-loose text-left space-y-4 mb-8">
+                <p class="text-[#E8DCC4] border-b border-[#2A251B] pb-3">目前本場次報名已額滿，感謝你的關注與支持 🙏</p>
+                <p>如果你願意留下聯絡資訊，我們可以為你保留候補資格：</p>
+                <ul class="space-y-2 opacity-90">
+                    <li class="flex items-start gap-3"><span class="text-[#D4B78F]">✦</span><span>一旦有名額釋出，將依序通知你遞補</span></li>
+                    <li class="flex items-start gap-3"><span class="text-[#D4B78F]">✦</span><span>下次開課或相關活動開放時，優先寄送通知給你</span></li>
+                </ul>
+                <p class="text-[#5C5547] text-xs">期待有機會與你見面，謝謝你的耐心等候。</p>
+            </div>
+
+            <form id="waitlistForm" novalidate class="space-y-5">
+                <div class="space-y-3">
+                    <label class="text-[10px] tracking-[0.3em] text-[#8A8068] uppercase font-medium">姓名 / Name <span class="text-[#8B0000]">*</span></label>
+                    <input type="text" name="name" id="wl-name" required autocomplete="name"
+                        class="w-full px-5 py-4 rounded-xl text-sm" placeholder="請輸入姓名">
+                    <p class="error-msg" id="err-wl-name">請輸入姓名</p>
+                </div>
+                <div class="space-y-3">
+                    <label class="text-[10px] tracking-[0.3em] text-[#8A8068] uppercase font-medium">聯絡電話 / Phone <span class="text-[#8B0000]">*</span></label>
+                    <input type="tel" name="phone" id="wl-phone" required autocomplete="tel" inputmode="numeric"
+                        class="w-full px-5 py-4 rounded-xl text-sm" placeholder="09xxxxxxxx">
+                    <p class="error-msg" id="err-wl-phone">請輸入有效的手機號碼（09 開頭，共 10 碼）</p>
+                </div>
+                <div class="space-y-3">
+                    <label class="text-[10px] tracking-[0.3em] text-[#8A8068] uppercase font-medium">電子郵件 / Email <span class="text-[#8B0000]">*</span></label>
+                    <input type="email" name="email" id="wl-email" required autocomplete="email"
+                        class="w-full px-5 py-4 rounded-xl text-sm" placeholder="接收通知使用">
+                    <p class="error-msg" id="err-wl-email">請輸入有效的 Email 格式</p>
+                </div>
+                <input type="hidden" name="type" value="候補名單">
+                <button type="submit" id="waitlistBtn" class="w-full btn-gold py-5 rounded-2xl text-sm font-bold tracking-[0.5em] uppercase shadow-2xl mt-2">
+                    登記候補資格
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ═══ 成功 / 候補 結果彈窗 ═══ -->
+    <div id="success-modal" class="fixed inset-0 z-[100] hidden" style="display:none;align-items:center;justify-content:center;padding:1.5rem">
         <div class="absolute inset-0 bg-black/90 backdrop-blur-xl"></div>
         <div class="bg-[#0D0C0B] border border-[#D4B78F]/30 rounded-[2rem] p-10 md:p-14 max-w-lg w-full relative text-center shadow-[0_0_100px_rgba(0,0,0,1)] animate-fadeInUp modal-glow">
             <div class="w-20 h-20 bg-gradient-to-br from-[#D4B78F] to-[#A38A6A] rounded-full flex items-center justify-center mx-auto mb-10 shadow-lg">
@@ -228,95 +336,208 @@
             </div>
             <h3 id="modalTitle" class="text-2xl md:text-3xl font-serif text-[#D4B78F] mb-6 tracking-[0.2em]">報名已受理</h3>
             <div id="modalDesc" class="text-[#A39171] text-sm md:text-base font-light leading-loose mb-12 text-left space-y-4"></div>
-            <button id="closeModalBtn" onclick="location.reload()" class="w-full py-5 btn-gold rounded-xl tracking-[0.4em] text-xs font-bold uppercase">
+            <button id="closeModalBtn" onclick="location.reload()"
+                class="w-full py-5 btn-gold rounded-xl tracking-[0.4em] text-xs font-bold uppercase">
                 確認
             </button>
         </div>
     </div>
 
-    <!-- 載入中 -->
-    <div id="loading-overlay" class="fixed inset-0 z-[110] hidden bg-black/90 backdrop-blur-sm flex items-center justify-center text-[#D4B78F]">
-        <div class="text-center">
-            <div class="w-12 h-12 border-2 border-[#D4B78F]/20 border-t-[#D4B78F] rounded-full animate-spin mx-auto mb-8"></div>
-            <p class="text-[10px] tracking-[0.5em] uppercase opacity-60">Processing...</p>
-        </div>
-    </div>
-
     <script>
-        const form = document.getElementById('bookingForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const loading = document.getElementById('loading-overlay');
-        const successModal = document.getElementById('success-modal');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalDesc = document.getElementById('modalDesc');
-        const modalIcon = document.getElementById('modalIcon');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-        
-        // 此 URL 請保持與您原本功能一致
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbx0ZtWwShCgCMZYiEP3DCspfq-KXgx8l0fR9nC2xXbLzgVFCY0YuqFCN-VDowr-rYpt/exec'; 
+    (() => {
+        'use strict';
 
-        // 頁面開啟時自動檢查是否額滿
-        window.addEventListener('load', () => {
-            fetch(`${scriptURL}?action=checkStatus`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.isFull) {
-                    showFullNotification();
-                }
-            })
-            .catch(err => console.log('Init check error:', err));
+        // ─── 設定區（只需修改這裡）─────────────────────────────────
+        const CONFIG = {
+            scriptURL: 'https://script.google.com/macros/s/AKfycbx0ZtWwShCgCMZYiEP3DCspfq-KXgx8l0fR9nC2xXbLzgVFCY0YuqFCN-VDowr-rYpt/exec',
+            actions: {
+                CHECK_FULL: 'checkFull',
+                REGISTER:   'register',
+                WAITLIST:   'waitlist'
+            }
+        };
+
+        // ─── 驗證工具 ────────────────────────────────────────────────
+        const Validator = {
+            isEmail:  v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
+            isPhone:  v => /^09\d{8}$/.test(v.trim().replace(/[-\s]/g, '')),
+            notEmpty: v => v.trim().length > 0,
+
+            showError(fieldId, errId) {
+                document.getElementById(fieldId)?.classList.add('field-error');
+                document.getElementById(errId)?.classList.add('visible');
+            },
+            clearError(fieldId, errId) {
+                document.getElementById(fieldId)?.classList.remove('field-error');
+                document.getElementById(errId)?.classList.remove('visible');
+            },
+
+            validateRegForm() {
+                let ok = true;
+                const name  = document.getElementById('reg-name').value;
+                const phone = document.getElementById('reg-phone').value;
+                const email = document.getElementById('reg-email').value;
+                const agree = document.getElementById('reg-agreement').checked;
+
+                if (!this.notEmpty(name)) { this.showError('reg-name',  'err-reg-name');  ok = false; }
+                else                      { this.clearError('reg-name', 'err-reg-name'); }
+
+                if (!this.isPhone(phone)) { this.showError('reg-phone',  'err-reg-phone');  ok = false; }
+                else                      { this.clearError('reg-phone', 'err-reg-phone'); }
+
+                if (!this.isEmail(email)) { this.showError('reg-email',  'err-reg-email');  ok = false; }
+                else                      { this.clearError('reg-email', 'err-reg-email'); }
+
+                if (!agree) { this.showError('reg-agreement',  'err-reg-agreement');  ok = false; }
+                else        { this.clearError('reg-agreement', 'err-reg-agreement'); }
+
+                return ok;
+            },
+
+            validateWaitlistForm() {
+                let ok = true;
+                const name  = document.getElementById('wl-name').value;
+                const phone = document.getElementById('wl-phone').value;
+                const email = document.getElementById('wl-email').value;
+
+                if (!this.notEmpty(name)) { this.showError('wl-name',  'err-wl-name');  ok = false; }
+                else                      { this.clearError('wl-name', 'err-wl-name'); }
+
+                if (!this.isPhone(phone)) { this.showError('wl-phone',  'err-wl-phone');  ok = false; }
+                else                      { this.clearError('wl-phone', 'err-wl-phone'); }
+
+                if (!this.isEmail(email)) { this.showError('wl-email',  'err-wl-email');  ok = false; }
+                else                      { this.clearError('wl-email', 'err-wl-email'); }
+
+                return ok;
+            }
+        };
+
+        // ─── UI 工具 ─────────────────────────────────────────────────
+        const UI = {
+            showModal(id) {
+                document.getElementById(id).style.display = 'flex';
+            },
+            hideModal(id) {
+                document.getElementById(id).style.display = 'none';
+            },
+            setBtnLoading(btn, loading, defaultText) {
+                btn.disabled = loading;
+                btn.innerHTML = loading
+                    ? `<span class="btn-spinner"></span>處理中...`
+                    : defaultText;
+            },
+            showResult({ title, desc, icon }) {
+                document.getElementById('modalTitle').innerText = title;
+                document.getElementById('modalDesc').innerHTML  = desc;
+                document.getElementById('modalIcon').className  = icon;
+                this.showModal('success-modal');
+            }
+        };
+
+        // ─── API 工具 ────────────────────────────────────────────────
+        const Api = {
+            async checkFull() {
+                const res = await fetch(`${CONFIG.scriptURL}?action=${CONFIG.actions.CHECK_FULL}`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return res.json();
+            },
+            async post(formData) {
+                const res = await fetch(CONFIG.scriptURL, { method: 'POST', body: formData });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return res.json();
+            }
+        };
+
+        // ─── 頁面載入：自動檢查是否額滿 ────────────────────────────
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const data = await Api.checkFull();
+                if (data.isFull) UI.showModal('full-modal');
+            } catch (e) {
+                // 查詢失敗靜默處理，不阻擋使用者填表
+                console.warn('[checkFull] 無法取得名額狀態，跳過檢查。', e.message);
+            }
         });
 
-        function showFullNotification() {
-            modalIcon.className = 'fa-solid fa-bell text-[#12110F] text-2xl';
-            modalTitle.innerText = '名額已額滿通知';
-            modalDesc.innerHTML = `
-                <div class="space-y-4">
-                    <p class="text-[#E8DCC4] border-b border-[#3A3225] pb-2">目前本場次報名已額滿，感謝您的關注 🙏</p>
-                    <p>如果您願意留下聯絡資訊，我們將為您保留<strong>候補資格</strong>：</p>
-                    <ul class="space-y-2 opacity-90">
-                        <li class="flex items-start gap-3"><span class="text-[#D4B78F]">✦</span> <span>一旦名額釋出，將依序通知您遞補</span></li>
-                        <li class="flex items-start gap-3"><span class="text-[#D4B78F]">✦</span> <span>下次開課或相關活動開放時優先通知</span></li>
-                    </ul>
-                </div>
-            `;
-            closeModalBtn.innerText = "填寫候補資訊";
-            closeModalBtn.onclick = () => { successModal.classList.add('hidden'); };
-            successModal.classList.remove('hidden');
-        }
+        // ─── 關閉額滿彈窗（供 onclick 使用）────────────────────────
+        window.closeFullModal = () => UI.hideModal('full-modal');
 
-        form.addEventListener('submit', e => {
+        // ─── 候補表單提交 ─────────────────────────────────────────
+        const waitlistForm = document.getElementById('waitlistForm');
+        const waitlistBtn  = document.getElementById('waitlistBtn');
+        let waitlistSubmitting = false;
+
+        waitlistForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            loading.classList.remove('hidden');
-            submitBtn.disabled = true;
+            if (waitlistSubmitting) return;
+            if (!Validator.validateWaitlistForm()) return;
 
-            const formData = new FormData(form);
-            
-            fetch(scriptURL, { method: 'POST', body: formData })
-            .then(response => response.json()) 
-            .then(data => {
-                loading.classList.add('hidden');
-                
-                if (data.isFull) {
-                    modalTitle.innerText = '候補登記成功';
-                    modalDesc.innerHTML = `<p class="text-center">您已列入候補名單，一旦有名額釋出將依序通知。</p>`;
-                    modalIcon.className = 'fa-solid fa-envelope-open-text text-[#12110F] text-2xl';
-                } else {
-                    modalTitle.innerText = '報名正式成功';
-                    modalDesc.innerHTML = `<p class="text-center">恭喜您成功報名！確認信已寄發，名額已為您保留。</p>`;
-                    modalIcon.className = 'fa-solid fa-check text-[#12110F] text-2xl';
-                }
+            waitlistSubmitting = true;
+            UI.setBtnLoading(waitlistBtn, true, '登記候補資格');
 
-                closeModalBtn.innerText = "確定並關閉";
-                closeModalBtn.onclick = () => { location.reload(); };
-                successModal.classList.remove('hidden');
-            })
-            .catch(error => {
-                loading.classList.add('hidden');
-                submitBtn.disabled = false;
-                alert('提交失敗，請檢查網路。');
-            });
+            const fd = new FormData(waitlistForm);
+            fd.append('action', CONFIG.actions.WAITLIST);
+
+            try {
+                await Api.post(fd);
+                UI.hideModal('full-modal');
+                UI.showResult({
+                    title: '已列入候補',
+                    desc:  '<p class="text-center">系統已將您列入候補名單，確認信已寄至您的信箱。<br>如有名額釋出將依序優先通知您。</p>',
+                    icon:  'fa-solid fa-envelope-open-text text-[#12110F] text-2xl'
+                });
+                waitlistForm.reset();
+            } catch (err) {
+                console.error('[waitlist] 送出失敗', err.message);
+                alert('送出失敗，請檢查網路或聯繫官方 LINE。');
+                UI.setBtnLoading(waitlistBtn, false, '登記候補資格');
+            } finally {
+                waitlistSubmitting = false;
+            }
         });
+
+        // ─── 正式報名表單提交 ────────────────────────────────────
+        const bookingForm = document.getElementById('bookingForm');
+        const submitBtn   = document.getElementById('submitBtn');
+        let regSubmitting = false;
+
+        bookingForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (regSubmitting) return;
+            if (!Validator.validateRegForm()) return;
+
+            regSubmitting = true;
+            UI.setBtnLoading(submitBtn, true, '確認提交報名');
+
+            const fd = new FormData(bookingForm);
+            fd.append('action', CONFIG.actions.REGISTER);
+
+            try {
+                const data = await Api.post(fd);
+                if (data.isFull) {
+                    UI.showResult({
+                        title: '候補登記成功',
+                        desc:  '<p class="text-center">您已列入候補名單，一旦有名額釋出將依序通知。</p>',
+                        icon:  'fa-solid fa-envelope-open-text text-[#12110F] text-2xl'
+                    });
+                } else {
+                    UI.showResult({
+                        title: '報名正式成功',
+                        desc:  '<p class="text-center">恭喜您成功報名！確認信已寄發，名額已為您保留。</p>',
+                        icon:  'fa-solid fa-check text-[#12110F] text-2xl'
+                    });
+                }
+            } catch (err) {
+                console.error('[register] 送出失敗', err.message);
+                alert('提交失敗，請檢查網路或聯繫官方 LINE。');
+                UI.setBtnLoading(submitBtn, false, '確認提交報名');
+            } finally {
+                regSubmitting = false;
+            }
+        });
+
+    })();
     </script>
 </body>
 </html>
