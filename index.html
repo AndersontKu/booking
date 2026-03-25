@@ -3,223 +3,277 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>御景家＿神明花 | 課程報名</title>
+
+    <title>御景家＿神明花 | 神明花基礎課程報名</title>
+    <meta name="description" content="御景家＿神明花基礎課程正式開放報名。專為零基礎學員設計，由淺入深教學，親手完成精緻敬神花藝。立即預約名額。">
+    <meta name="keywords" content="御景家, 神明花, 敬神花, 花藝課程, 手作課程, 神明花報名">
+    <meta name="author" content="御景家 YUJINGJIA">
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <style>
-        :root { --brand-gold: #D4B78F; --brand-gold-dark: #A38A6A; --brand-black: #0D0C0B; --brand-text: #E8DCC4; }
-        body { font-family: 'Noto Sans TC', sans-serif; background-color: var(--brand-black); color: var(--brand-text); }
-        .glass-panel { background: rgba(22, 20, 18, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(212, 183, 143, 0.1); }
-        .info-box { border-left: 2px solid var(--brand-gold); background: rgba(212, 183, 143, 0.05); padding: 1.5rem; border-radius: 0 1rem 1rem 0; }
-        .btn-gold { background: linear-gradient(135deg, var(--brand-gold) 0%, var(--brand-gold-dark<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>御景家＿神明花 | 課程報名</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        :root { --brand-gold: #D4B78F; --brand-gold-dark: #A38A6A; --brand-black: #0D0C0B; --brand-text: #E8DCC4; }
-        body { font-family: 'Noto Sans TC', sans-serif; background-color: var(--brand-black); color: var(--brand-text); }
-        .glass-panel { background: rgba(22, 20, 18, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(212, 183, 143, 0.1); }
-        .info-box { border-left: 2px solid var(--brand-gold); background: rgba(212, 183, 143, 0.05); padding: 1.5rem; border-radius: 0 1rem 1rem 0; }
-        .btn-gold { background: linear-gradient(135deg, var(--brand-gold) 0%, var(--brand-gold-dark) 100%); color: #12110F; transition: all 0.3s; }
-        .btn-gold:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(212, 183, 143, 0.2); }
-        input, select { background: rgba(23, 21, 18, 0.8) !important; border: 1px solid #2A251B !important; color: white !important; }
-        .error-msg { color: #ff4d4d; font-size: 0.75rem; display: none; margin-top: 0.25rem; }
+        :root {
+            --brand-gold: #D4B78F;
+            --brand-gold-dark: #A38A6A;
+            --brand-black: #0D0C0B;
+            --brand-gray: #161412;
+            --brand-accent: #2A251B;
+            --brand-text: #E8DCC4;
+        }
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--brand-black);
+            color: var(--brand-text);
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .bg-pattern {
+            background-color: var(--brand-black);
+            background-image:
+                radial-gradient(circle at 2px 2px, rgba(212, 183, 143, 0.03) 1px, transparent 0),
+                radial-gradient(circle at 50% 50%, rgba(212, 183, 143, 0.05) 0%, transparent 50%);
+            background-size: 40px 40px, 100% 100%;
+        }
+        /* 與輸入框一致的風格 */
+        .info-card {
+            background-color: rgba(23, 21, 18, 0.8);
+            border: 1px solid var(--brand-accent);
+            backdrop-filter: blur(5px);
+            transition: all 0.5s ease;
+        }
+        .info-card:hover {
+            border-color: var(--brand-gold-dark);
+            transform: translateY(-3px);
+        }
+        input, select, textarea {
+            background-color: rgba(23, 21, 18, 0.8) !important;
+            border: 1px solid var(--brand-accent) !important;
+            color: var(--brand-text) !important;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            backdrop-filter: blur(5px);
+        }
+        input:focus {
+            border-color: var(--brand-gold) !important;
+            box-shadow: 0 0 15px rgba(212, 183, 143, 0.15) !important;
+            outline: none;
+        }
+        .error-msg { color: #c0392b; font-size: 0.7rem; margin-top: 4px; display: none; }
         .error-msg.visible { display: block; }
+        .btn-gold {
+            background: linear-gradient(135deg, var(--brand-gold) 0%, var(--brand-gold-dark) 100%);
+            color: #12110F;
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .btn-gold:hover:not(:disabled) {
+            filter: brightness(1.1);
+            letter-spacing: 0.2em;
+            box-shadow: 0 15px 35px rgba(212, 183, 143, 0.25);
+            transform: translateY(-2px);
+        }
+        .glass-panel {
+            background: rgba(22, 20, 18, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 183, 143, 0.1);
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeInUp { animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="bg-pattern min-h-screen">
 
-    <nav class="p-6 border-b border-[#2A251B]">
-        <div class="max-w-4xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 border border-[#D4B78F] flex items-center justify-center rotate-45"><span class="-rotate-45 text-[#D4B78F] font-bold">御</span></div>
-                <h1 class="text-xl tracking-widest text-[#D4B78F] font-serif">御景家</h1>
+    <nav class="sticky top-0 z-50 bg-[#0D0C0B]/80 backdrop-blur-xl border-b border-[#2A251B]/50">
+        <div class="max-w-4xl mx-auto px-6 py-5 flex justify-between items-center">
+            <div class="flex items-center gap-4 group">
+                <div class="w-9 h-9 rounded-sm border border-[#D4B78F]/40 flex items-center justify-center transition-all duration-700">
+                    <span class="text-[#D4B78F] font-serif font-bold text-lg">御</span>
+                </div>
+                <div class="flex flex-col">
+                    <h1 class="text-xl font-serif tracking-[0.3em] text-[#D4B78F]">御景家</h1>
+                    <span class="text-[8px] tracking-[0.4em] text-[#5C5547] uppercase -mt-1 font-light">YUJINGJIA ART STUDIO</span>
+                </div>
             </div>
+            <a href="https://line.me/ti/g/NPayXcjfUr" target="_blank" class="text-[10px] tracking-[0.3em] text-[#A39171] uppercase hover:text-[#D4B78F] transition-all">
+                <i class="fa-brands fa-line text-sm"></i> Join Community
+            </a>
         </div>
     </nav>
 
-    <main class="max-w-3xl mx-auto px-6 py-12">
-        <div class="glass-panel rounded-3xl p-8 md:p-12 space-y-10">
-            
-            <section class="space-y-4">
-                <h2 class="text-[#D4B78F] text-lg font-bold flex items-center gap-2">
-                    <i class="fa-solid fa-leaf"></i> 課程說明
-                </h2>
-                <p class="text-sm leading-relaxed text-[#A39171] font-light">
-                    本課程特別適合沒有手作經驗的學員。教學將從最基礎開始，步驟清楚、節奏輕鬆，即使是第一次接觸神明花／敬神花，也能安心完成屬於自己的作品。
+    <header class="relative h-[25vh] flex items-center justify-center overflow-hidden">
+        <div class="relative text-center px-6 animate-fadeInUp">
+            <div class="inline-block px-4 py-1 border border-[#D4B78F]/20 rounded-full text-[9px] tracking-[0.4em] text-[#A39171] mb-4 uppercase">Registration Form</div>
+            <h2 id="hero-title" class="text-3xl md:text-4xl font-serif tracking-[0.2em] text-[#D4B78F]">神明花基礎課程</h2>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-6 pb-24 relative z-10">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 animate-fadeInUp">
+            <div class="info-card p-8 rounded-2xl flex flex-col">
+                <h3 class="text-[#D4B78F] font-bold text-sm tracking-widest mb-4 flex items-center gap-3">
+                    <i class="fa-solid fa-leaf text-xs"></i> 📌 課程說明
+                </h3>
+                <p class="text-[11px] leading-loose text-[#A39171] font-light">
+                    本課程特別適合沒有手作經驗的學員。教學將從最基礎開始，步驟清楚、節奏輕鬆，即使是第一次接觸神明花，也能安心完成屬於自己的作品。
                 </p>
-            </section>
+            </div>
 
-            <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="info-box space-y-3">
-                    <h3 class="text-[#D4B78F] text-sm font-bold tracking-widest">📌 報名須知</h3>
-                    <ul class="text-[11px] text-[#A39171] space-y-2 font-light">
-                        <li>1. 全天授課，依人數準備練習材料。</li>
-                        <li>2. 完成即保留名額，開課後恕不退費。</li>
-                        <li>3. 材料當日發放，未出席者恕不補發。</li>
-                        <li>4. 取消請於開課前「三日」告知。</li>
-                    </ul>
+            <div class="info-card p-8 rounded-2xl flex flex-col">
+                <h3 class="text-[#D4B78F] font-bold text-sm tracking-widest mb-4 flex items-center gap-3">
+                    <i class="fa-solid fa-circle-info text-xs"></i> 📌 報名須知
+                </h3>
+                <ul class="text-[11px] leading-loose text-[#A39171] font-light space-y-1">
+                    <li>1. 本課程為全天授課，依人數準備材料。</li>
+                    <li>2. 完成即保留名額，開課後恕不辦理退費。</li>
+                    <li>3. 材料當日發放，未能出席者恕不補發。</li>
+                    <li>4. 取消請於開課前「三日」告知。</li>
+                </ul>
+            </div>
+
+            <div class="info-card p-8 rounded-2xl flex flex-col">
+                <h3 class="text-[#D4B78F] font-bold text-sm tracking-widest mb-4 flex items-center gap-3">
+                    <i class="fa-solid fa-wallet text-xs"></i> 📌 繳費方式
+                </h3>
+                <div class="text-[11px] leading-loose text-[#A39171] font-light">
+                    <p>1. 本課程採 <span class="text-[#D4B78F]">現場現金繳費制</span>。</p>
+                    <p>2. 請於課程當天攜帶現金至現場完成繳費，感謝您的理解與配合。</p>
                 </div>
-                <div class="info-box space-y-3">
-                    <h3 class="text-[#D4B78F] text-sm font-bold tracking-widest">📌 繳費方式</h3>
-                    <p class="text-[11px] text-[#A39171] leading-relaxed font-light">
-                        本課程採 <span class="text-[#D4B78F] font-bold">現場現金繳費制</span>。<br>
-                        請於課程當天攜帶現金至現場完成繳費，感謝您的配合。
-                    </p>
-                </div>
-            </section>
+            </div>
+        </div>
 
-            <hr class="border-[#2A251B]">
-
-            <form id="bookingForm" class="space-y-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="space-y-2">
-                        <label class="text-xs text-[#8A8068] tracking-widest uppercase">姓名 / Name</label>
-                        <input type="text" id="reg-name" name="name" required class="w-full p-4 rounded-xl text-sm" placeholder="請輸入姓名">
-                        <p class="error-msg" id="err-reg-name">請填寫姓名</p>
+        <div class="glass-panel rounded-3xl p-10 md:p-16 animate-fadeInUp">
+            <form id="bookingForm" novalidate class="space-y-10">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div class="space-y-3">
+                        <label class="text-[10px] tracking-[0.3em] text-[#8A8068] flex justify-between uppercase">
+                            <span>姓名 / Name</span>
+                            <span class="text-[#8B0000] opacity-80">*必填</span>
+                        </label>
+                        <input type="text" name="name" id="reg-name" required class="w-full px-5 py-4 rounded-xl text-sm" placeholder="請輸入姓名">
+                        <p class="error-msg" id="err-reg-name">請輸入姓名</p>
                     </div>
-                    <div class="space-y-2">
-                        <label class="text-xs text-[#8A8068] tracking-widest uppercase">電話 / Phone</label>
-                        <input type="tel" id="reg-phone" name="phone" required class="w-full p-4 rounded-xl text-sm" placeholder="09xxxxxxxx">
-                        <p class="error-msg" id="err-reg-phone">請填寫有效電話</p>
+                    <div class="space-y-3">
+                        <label class="text-[10px] tracking-[0.3em] text-[#8A8068] flex justify-between uppercase">
+                            <span>聯絡電話 / Phone</span>
+                            <span class="text-[#8B0000] opacity-80">*必填</span>
+                        </label>
+                        <input type="tel" name="phone" id="reg-phone" required class="w-full px-5 py-4 rounded-xl text-sm" placeholder="09xxxxxxxx">
+                        <p class="error-msg" id="err-reg-phone">請輸入有效的手機號碼</p>
                     </div>
                 </div>
 
-                <div class="space-y-2">
-                    <label class="text-xs text-[#8A8068] tracking-widest uppercase">電子郵件 / Email</label>
-                    <input type="email" id="reg-email" name="email" required class="w-full p-4 rounded-xl text-sm" placeholder="接收確認信用">
-                    <p class="error-msg" id="err-reg-email">請填寫正確 Email</p>
+                <div class="space-y-3">
+                    <label class="text-[10px] tracking-[0.3em] text-[#8A8068] flex justify-between uppercase">
+                        <span>電子郵件 / Email</span>
+                        <span class="text-[#8B0000] opacity-80">*必填</span>
+                    </label>
+                    <input type="email" name="email" id="reg-email" required class="w-full px-5 py-4 rounded-xl text-sm" placeholder="接收確認信用">
+                    <p class="error-msg" id="err-reg-email">請輸入有效的 Email</p>
                 </div>
 
-                <div class="space-y-2">
-                    <label class="text-xs text-[#8A8068] tracking-widest uppercase">選擇場次 / Course</label>
-                    <div id="course-display" class="w-full p-4 rounded-xl text-sm bg-[#171512] border border-[#2A251B] text-[#D4B78F]">載入中...</div>
-                    <input type="hidden" id="hidden-course" name="course">
+                <div class="space-y-3">
+                    <label class="text-[10px] tracking-[0.3em] text-[#8A8068] uppercase">課程場次 / Course Info</label>
+                    <div id="course-display" class="w-full px-5 py-4 rounded-xl text-sm border border-[#2A251B] text-[#D4B78F] bg-[#171512]">載入中...</div>
+                    <input type="hidden" name="course" id="hidden-course">
                 </div>
 
-                <div class="pt-4">
-                    <label class="flex items-start gap-3 cursor-pointer">
-                        <input type="checkbox" id="reg-agreement" required class="mt-1">
-                        <span class="text-[11px] text-[#A39171] leading-relaxed">
+                <div class="pt-6 border-t border-[#2A251B]/50">
+                    <label class="flex items-start gap-4 cursor-pointer group">
+                        <input type="checkbox" id="reg-agreement" required class="mt-1 w-4 h-4 accent-[#D4B78F]">
+                        <span class="text-[11px] leading-relaxed text-[#A39171] group-hover:text-[#D4B78F] transition-colors">
                             本人已閱讀並同意以上 <span class="text-[#D4B78F]">報名須知</span> 與 <span class="text-[#D4B78F]">繳費方式</span>，並承諾於當天現場繳費。
                         </span>
                     </label>
-                    <p class="error-msg" id="err-reg-agreement">請勾選同意</p>
+                    <p class="error-msg" id="err-reg-agreement">請勾選同意後再送出</p>
                 </div>
 
-                <button type="submit" id="submitBtn" class="w-full btn-gold py-5 rounded-2xl font-bold tracking-[0.5em] text-sm uppercase">
-                    提交報名資料
+                <button type="submit" id="submitBtn" class="w-full btn-gold py-6 rounded-2xl text-sm font-bold tracking-[0.5em] uppercase">
+                    確認提交報名
                 </button>
             </form>
         </div>
     </main>
 
-    <script>
-        // (此處請使用上一回合提供的 CONFIG 與 Script 邏輯，網址請記得換成你的最新的那個)
-    </script>
-</body>
-</html>) 100%); color: #12110F; transition: all 0.3s; }
-        .btn-gold:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(212, 183, 143, 0.2); }
-        input, select { background: rgba(23, 21, 18, 0.8) !important; border: 1px solid #2A251B !important; color: white !important; }
-        .error-msg { color: #ff4d4d; font-size: 0.75rem; display: none; margin-top: 0.25rem; }
-        .error-msg.visible { display: block; }
-    </style>
-</head>
-<body class="min-h-screen">
-
-    <nav class="p-6 border-b border-[#2A251B]">
-        <div class="max-w-4xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 border border-[#D4B78F] flex items-center justify-center rotate-45"><span class="-rotate-45 text-[#D4B78F] font-bold">御</span></div>
-                <h1 class="text-xl tracking-widest text-[#D4B78F] font-serif">御景家</h1>
-            </div>
+    <div id="success-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-6">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-xl"></div>
+        <div class="bg-[#0D0C0B] border border-[#D4B78F]/30 rounded-[2rem] p-10 max-w-lg w-full relative text-center shadow-2xl animate-fadeInUp">
+            <h3 id="modalTitle" class="text-2xl font-serif text-[#D4B78F] mb-6 tracking-widest"></h3>
+            <div id="modalDesc" class="text-[#A39171] text-sm leading-loose mb-10"></div>
+            <button onclick="location.reload()" class="w-full py-5 btn-gold rounded-xl text-xs font-bold tracking-widest uppercase">確認</button>
         </div>
-    </nav>
-
-    <main class="max-w-3xl mx-auto px-6 py-12">
-        <div class="glass-panel rounded-3xl p-8 md:p-12 space-y-10">
-            
-            <section class="space-y-4">
-                <h2 class="text-[#D4B78F] text-lg font-bold flex items-center gap-2">
-                    <i class="fa-solid fa-leaf"></i> 課程說明
-                </h2>
-                <p class="text-sm leading-relaxed text-[#A39171] font-light">
-                    本課程特別適合沒有手作經驗的學員。教學將從最基礎開始，步驟清楚、節奏輕鬆，即使是第一次接觸神明花／敬神花，也能安心完成屬於自己的作品。
-                </p>
-            </section>
-
-            <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="info-box space-y-3">
-                    <h3 class="text-[#D4B78F] text-sm font-bold tracking-widest">📌 報名須知</h3>
-                    <ul class="text-[11px] text-[#A39171] space-y-2 font-light">
-                        <li>1. 全天授課，依人數準備練習材料。</li>
-                        <li>2. 完成即保留名額，開課後恕不退費。</li>
-                        <li>3. 材料當日發放，未出席者恕不補發。</li>
-                        <li>4. 取消請於開課前「三日」告知。</li>
-                    </ul>
-                </div>
-                <div class="info-box space-y-3">
-                    <h3 class="text-[#D4B78F] text-sm font-bold tracking-widest">📌 繳費方式</h3>
-                    <p class="text-[11px] text-[#A39171] leading-relaxed font-light">
-                        本課程採 <span class="text-[#D4B78F] font-bold">現場現金繳費制</span>。<br>
-                        請於課程當天攜帶現金至現場完成繳費，感謝您的配合。
-                    </p>
-                </div>
-            </section>
-
-            <hr class="border-[#2A251B]">
-
-            <form id="bookingForm" class="space-y-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="space-y-2">
-                        <label class="text-xs text-[#8A8068] tracking-widest uppercase">姓名 / Name</label>
-                        <input type="text" id="reg-name" name="name" required class="w-full p-4 rounded-xl text-sm" placeholder="請輸入姓名">
-                        <p class="error-msg" id="err-reg-name">請填寫姓名</p>
-                    </div>
-                    <div class="space-y-2">
-                        <label class="text-xs text-[#8A8068] tracking-widest uppercase">電話 / Phone</label>
-                        <input type="tel" id="reg-phone" name="phone" required class="w-full p-4 rounded-xl text-sm" placeholder="09xxxxxxxx">
-                        <p class="error-msg" id="err-reg-phone">請填寫有效電話</p>
-                    </div>
-                </div>
-
-                <div class="space-y-2">
-                    <label class="text-xs text-[#8A8068] tracking-widest uppercase">電子郵件 / Email</label>
-                    <input type="email" id="reg-email" name="email" required class="w-full p-4 rounded-xl text-sm" placeholder="接收確認信用">
-                    <p class="error-msg" id="err-reg-email">請填寫正確 Email</p>
-                </div>
-
-                <div class="space-y-2">
-                    <label class="text-xs text-[#8A8068] tracking-widest uppercase">選擇場次 / Course</label>
-                    <div id="course-display" class="w-full p-4 rounded-xl text-sm bg-[#171512] border border-[#2A251B] text-[#D4B78F]">載入中...</div>
-                    <input type="hidden" id="hidden-course" name="course">
-                </div>
-
-                <div class="pt-4">
-                    <label class="flex items-start gap-3 cursor-pointer">
-                        <input type="checkbox" id="reg-agreement" required class="mt-1">
-                        <span class="text-[11px] text-[#A39171] leading-relaxed">
-                            本人已閱讀並同意以上 <span class="text-[#D4B78F]">報名須知</span> 與 <span class="text-[#D4B78F]">繳費方式</span>，並承諾於當天現場繳費。
-                        </span>
-                    </label>
-                    <p class="error-msg" id="err-reg-agreement">請勾選同意</p>
-                </div>
-
-                <button type="submit" id="submitBtn" class="w-full btn-gold py-5 rounded-2xl font-bold tracking-[0.5em] text-sm uppercase">
-                    提交報名資料
-                </button>
-            </form>
-        </div>
-    </main>
+    </div>
 
     <script>
-        // (此處請使用上一回合提供的 CONFIG 與 Script 邏輯，網址請記得換成你的最新的那個)
+    (() => {
+        'use strict';
+        const CONFIG = {
+            // 已更新為你截圖中最新的部署網址
+            scriptURL: 'https://script.google.com/macros/s/AKfycbzmaY1fimFJhYvEzWbAzyTBZUJ3DRSGV4GRzE56QaeOivTNvByfnbtGjCQNx8DVtsob/exec',
+            actions: { CHECK_FULL: 'checkFull', REGISTER: 'register' }
+        };
+
+        const Validator = {
+            isEmail: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
+            isPhone: v => /^09\d{8}$/.test(v.trim()),
+            showError(id, errId) { 
+                document.getElementById(id).classList.add('border-[#c0392b]');
+                document.getElementById(errId).classList.add('visible');
+            },
+            clearError(id, errId) {
+                document.getElementById(id).classList.remove('border-[#c0392b]');
+                document.getElementById(errId).classList.remove('visible');
+            }
+        };
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const res = await fetch(`${CONFIG.scriptURL}?action=${CONFIG.actions.CHECK_FULL}`);
+                const data = await res.json();
+                const info = `${data.courseName} ｜ ${data.courseDate} ｜ NT$ ${data.coursePrice}`;
+                document.getElementById('course-display').textContent = info;
+                document.getElementById('hidden-course').value = info;
+            } catch (e) { console.error(e); }
+        });
+
+        document.getElementById('bookingForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value;
+            const phone = document.getElementById('reg-phone').value;
+            const email = document.getElementById('reg-email').value;
+            const agree = document.getElementById('reg-agreement').checked;
+
+            let ok = true;
+            if(!name) { Validator.showError('reg-name', 'err-reg-name'); ok = false; } else Validator.clearError('reg-name', 'err-reg-name');
+            if(!Validator.isPhone(phone)) { Validator.showError('reg-phone', 'err-reg-phone'); ok = false; } else Validator.clearError('reg-phone', 'err-reg-phone');
+            if(!Validator.isEmail(email)) { Validator.showError('reg-email', 'err-reg-email'); ok = false; } else Validator.clearError('reg-email', 'err-reg-email');
+            if(!agree) { document.getElementById('err-reg-agreement').classList.add('visible'); ok = false; } else document.getElementById('err-reg-agreement').classList.remove('visible');
+
+            if(!ok) return;
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true; btn.innerText = '處理中...';
+
+            try {
+                const fd = new FormData(e.target);
+                fd.append('action', CONFIG.actions.REGISTER);
+                const res = await fetch(CONFIG.scriptURL, { method: 'POST', body: fd });
+                const data = await res.json();
+                
+                document.getElementById('modalTitle').innerText = data.status === '✅正取' ? '報名成功' : '已列入候補';
+                document.getElementById('modalDesc').innerHTML = '確認信已寄出，請檢查您的信箱。';
+                document.getElementById('success-modal').style.display = 'flex';
+            } catch (err) {
+                alert('提交失敗，請檢查網路。');
+                btn.disabled = false; btn.innerText = '確認提交報名';
+            }
+        });
+    })();
     </script>
 </body>
 </html>
