@@ -10,11 +10,37 @@
     <meta name="keywords" content="御景家, 神明花, 敬神花, 花藝課程, 手作課程, 神明花報名">
     <meta name="author" content="御景家 YUJINGJIA">
 
-    <!-- ═══ 社群分享標籤 Open Graph（LINE / FB 分享預覽） ═══ -->
+    <!-- ═══ 社群分享標籤 Open Graph（LINE / FB / IG 分享預覽） ═══ -->
     <meta property="og:title" content="御景家＿神明花 | 基礎課程報名登記">
-    <meta property="og:description" content="專為零基礎設計的神明花手作課，名額限 5 位，點擊進入報名系統預約席次。">
+    <meta property="og:description" content="專為零基礎設計的神明花手作課，名額有限，點擊進入報名系統預約席次。">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&q=80&w=1200">
+
+    <!-- ═══ Meta Pixel（請填入您的 Pixel ID）═══ -->
+    <!-- 
+    <script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+    document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', 'YOUR_PIXEL_ID'); // ← 填入 Meta Pixel ID
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID&ev=PageView&noscript=1"/></noscript>
+    -->
+
+    <!-- ═══ TikTok Pixel（請填入您的 Pixel ID）═══ -->
+    <!--
+    <script>
+    !function (w, d, t) {
+      w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"];ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e};ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{};ttq._i[e]=[];ttq._i[e]._u=i;ttq._t=ttq._t||{};ttq._t[e]=+new Date;ttq._o=ttq._o||{};ttq._o[e]=n||{};var o=document.createElement("script");o.type="text/javascript";o.async=!0;o.src=i+"?sdkid="+e+"&lib="+t;var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};
+      ttq.load('YOUR_TIKTOK_PIXEL_ID'); // ← 填入 TikTok Pixel ID
+      ttq.page();
+    }(window, document, 'ttq');
+    </script>
+    -->
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,6 +57,9 @@
             --brand-accent: #2A251B;
             --brand-text: #E8DCC4;
         }
+
+        * { box-sizing: border-box; }
+
         body {
             font-family: 'Noto Sans TC', sans-serif;
             background-color: var(--brand-black);
@@ -46,11 +75,79 @@
                 radial-gradient(circle at 50% 50%, rgba(212, 183, 143, 0.05) 0%, transparent 50%);
             background-size: 40px 40px, 100% 100%;
         }
+
+        /* ─── 骨架屏 (Skeleton Loading) ─── */
+        .skeleton {
+            background: linear-gradient(90deg, #1a1814 25%, #262219 50%, #1a1814 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.6s infinite;
+            border-radius: 0.5rem;
+        }
+        @keyframes shimmer {
+            0%   { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .skeleton-text { height: 1em; width: 60%; margin-bottom: 0.4em; }
+        .skeleton-block { height: 3.5rem; width: 100%; }
+        .skeleton-full { height: 4rem; width: 100%; }
+        .skeleton-info { height: 5rem; width: 100%; }
+
+        /* ─── 課程資訊說明區塊 ─── */
+        .info-glass {
+            background: rgba(22, 20, 18, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(212, 183, 143, 0.12);
+            border-radius: 1rem;
+            padding: 1.25rem 1.5rem;
+            transition: border-color 0.4s ease;
+        }
+        .info-glass:hover {
+            border-color: rgba(212, 183, 143, 0.25);
+        }
+        .info-glass-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+            border: 1px solid rgba(212, 183, 143, 0.3);
+            border-radius: 50%;
+            font-size: 0.75rem;
+            color: var(--brand-gold);
+            flex-shrink: 0;
+            margin-right: 0.75rem;
+        }
+        .info-glass-title {
+            font-size: 0.65rem;
+            letter-spacing: 0.3em;
+            color: var(--brand-gold);
+            text-transform: uppercase;
+            font-weight: 500;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+        }
+        .info-glass-body {
+            font-size: 0.75rem;
+            line-height: 1.9;
+            color: #A39171;
+            letter-spacing: 0.05em;
+        }
+        .info-glass-body li { padding-left: 1em; position: relative; }
+        .info-glass-body li::before {
+            content: '·';
+            position: absolute;
+            left: 0;
+            color: var(--brand-gold);
+        }
+
+        /* ─── 輸入框 ─── */
         input, select, textarea {
             background-color: rgba(23, 21, 18, 0.8) !important;
             border: 1px solid var(--brand-accent) !important;
             color: var(--brand-text) !important;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
             backdrop-filter: blur(5px);
         }
         input:focus, select:focus, textarea:focus {
@@ -66,12 +163,14 @@
         }
         .error-msg {
             color: #c0392b;
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             margin-top: 4px;
             letter-spacing: 0.05em;
             display: none;
         }
         .error-msg.visible { display: block; }
+
+        /* ─── 按鈕 ─── */
         .btn-gold {
             position: relative;
             background: linear-gradient(135deg, var(--brand-gold) 0%, var(--brand-gold-dark) 100%);
@@ -107,30 +206,69 @@
             margin-right: 8px;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ─── 玻璃面板 ─── */
         .glass-panel {
             background: rgba(22, 20, 18, 0.7);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(212, 183, 143, 0.1);
             box-shadow: 0 40px 100px -20px rgba(0,0,0,0.7);
         }
+
+        /* ─── 彈窗邊框脈動 ─── */
         @keyframes borderGlow {
             0%, 100% { border-color: rgba(212,183,143,0.5); box-shadow: 0 0 20px rgba(212,183,143,0.1); }
             50%       { border-color: rgba(212,183,143,0.1); box-shadow: 0 0 5px rgba(212,183,143,0); }
         }
         .modal-glow { animation: borderGlow 4s infinite ease-in-out; }
+
+        /* ─── 動畫 ─── */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
             to   { opacity: 1; transform: translateY(0); }
         }
         .animate-fadeInUp { animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        input[type="checkbox"] {
-            width: 18px; height: 18px;
-            cursor: pointer;
-            accent-color: var(--brand-gold);
-        }
-        .tracking-premium { letter-spacing: 0.3em; }
 
-        /* 課程資訊靜態顯示框 */
+        /* ─── 🔥 即將額滿警示條 ─── */
+        #urgency-bar {
+            display: none;
+            overflow: hidden;
+        }
+        #urgency-bar.show { display: block; }
+        @keyframes urgencyPulse {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.6; }
+        }
+        .urgency-text {
+            animation: urgencyPulse 1.5s infinite ease-in-out;
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+            color: #FF7A35;
+            text-align: center;
+            padding: 0.6rem 1rem;
+            background: rgba(255, 122, 53, 0.08);
+            border: 1px solid rgba(255, 122, 53, 0.25);
+            border-radius: 0.75rem;
+            margin-top: 0.75rem;
+        }
+
+        /* ─── 名額進度條 ─── */
+        .seats-bar-wrap {
+            height: 3px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        .seats-bar-fill {
+            height: 100%;
+            border-radius: 2px;
+            background: linear-gradient(90deg, var(--brand-gold), #FF7A35);
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ─── 課程資訊顯示框 ─── */
         .course-info-display {
             background-color: rgba(23, 21, 18, 0.8);
             border: 1px solid var(--brand-accent);
@@ -140,11 +278,35 @@
             font-size: 0.875rem;
             letter-spacing: 0.05em;
         }
+
+        /* ─── 已截止覆蓋層 ─── */
+        #closed-overlay {
+            display: none;
+            position: absolute;
+            inset: 0;
+            background: rgba(13, 12, 11, 0.9);
+            backdrop-filter: blur(8px);
+            border-radius: 1.5rem;
+            z-index: 20;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            padding: 2rem;
+        }
+        #closed-overlay.show { display: flex; }
+
+        input[type="checkbox"] {
+            width: 18px; height: 18px;
+            cursor: pointer;
+            accent-color: var(--brand-gold);
+        }
+        .tracking-premium { letter-spacing: 0.3em; }
     </style>
 </head>
 <body class="bg-pattern min-h-screen">
 
-    <!-- 導覽列 -->
+    <!-- ═══ 導覽列 ═══ -->
     <nav class="sticky top-0 z-50 bg-[#0D0C0B]/80 backdrop-blur-xl border-b border-[#2A251B]/50">
         <div class="max-w-4xl mx-auto px-6 py-5 flex justify-between items-center">
             <div class="flex items-center gap-4 group cursor-pointer">
@@ -165,22 +327,99 @@
         </div>
     </nav>
 
-    <!-- 主視覺區 -->
+    <!-- ═══ 主視覺區 ═══ -->
     <header class="relative h-[30vh] flex items-center justify-center overflow-hidden">
         <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&q=80&w=1600')] bg-cover bg-center opacity-10 scale-110"></div>
         <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#0D0C0B]/80 to-[#0D0C0B]"></div>
         <div class="relative text-center px-6 animate-fadeInUp">
             <div class="inline-block px-4 py-1 border border-[#D4B78F]/20 rounded-full text-[9px] tracking-[0.4em] text-[#A39171] mb-4 uppercase">Exquisite Floral Class</div>
-            <!-- 課程名稱由 GAS 動態帶入 -->
             <h2 id="hero-title" class="text-3xl md:text-4xl font-serif tracking-[0.25em] text-[#D4B78F] mb-4">神明花基礎課程</h2>
             <div class="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#D4B78F]/40 to-transparent mx-auto"></div>
         </div>
     </header>
 
     <main class="max-w-3xl mx-auto px-6 pb-24 relative z-10">
-        <div class="glass-panel rounded-3xl p-10 md:p-16 animate-fadeInUp">
-            <form id="bookingForm" novalidate class="space-y-12">
-                <section class="space-y-10">
+
+        <!-- ═══ 三個 Glassmorphism 說明區塊 ═══ -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+
+            <!-- 骨架屏（初始顯示） -->
+            <div id="sk-info-1" class="info-glass">
+                <div class="info-glass-title"><div class="skeleton skeleton-text w-3/4"></div></div>
+                <div class="info-glass-body"><div class="skeleton skeleton-info"></div></div>
+            </div>
+            <div id="sk-info-2" class="info-glass">
+                <div class="info-glass-title"><div class="skeleton skeleton-text w-3/4"></div></div>
+                <div class="info-glass-body"><div class="skeleton skeleton-info" style="height:7rem"></div></div>
+            </div>
+            <div id="sk-info-3" class="info-glass">
+                <div class="info-glass-title"><div class="skeleton skeleton-text w-3/4"></div></div>
+                <div class="info-glass-body"><div class="skeleton skeleton-info"></div></div>
+            </div>
+
+            <!-- 實際內容（隱藏，API 回傳後顯示） -->
+            <div id="info-card-1" class="info-glass" style="display:none">
+                <div class="info-glass-title">
+                    <span class="info-glass-icon">📖</span>
+                    課程說明
+                </div>
+                <div class="info-glass-body">
+                    本課程特別適合沒有手作經驗的學員。教學將從最基礎開始，步驟清楚、節奏輕鬆，讓您在輕鬆的氛圍中完成屬於自己的神明花。
+                </div>
+            </div>
+            <div id="info-card-2" class="info-glass" style="display:none">
+                <div class="info-glass-title">
+                    <span class="info-glass-icon">📋</span>
+                    報名須知
+                </div>
+                <ul class="info-glass-body space-y-1">
+                    <li>全天授課，依人數備料</li>
+                    <li>完成繳費後保留名額，開課後不退費</li>
+                    <li>材料當日發放，未出席不補發</li>
+                    <li>取消請於三日前告知</li>
+                </ul>
+            </div>
+            <div id="info-card-3" class="info-glass" style="display:none">
+                <div class="info-glass-title">
+                    <span class="info-glass-icon">💴</span>
+                    繳費方式
+                </div>
+                <ul class="info-glass-body space-y-1">
+                    <li>現場現金繳費制</li>
+                    <li>課程當天攜帶現金完成</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ═══ 名額狀態條 ═══ -->
+        <div id="seats-status-wrap" class="mb-6 px-2" style="display:none">
+            <div class="flex justify-between items-center text-[10px] tracking-widest text-[#5C5547] uppercase mb-1">
+                <span>Seats Availability</span>
+                <span id="seats-label" class="text-[#D4B78F]"></span>
+            </div>
+            <div class="seats-bar-wrap">
+                <div class="seats-bar-fill" id="seats-bar-fill" style="width:0%"></div>
+            </div>
+        </div>
+
+        <!-- ═══ 主表單面板 ═══ -->
+        <div class="glass-panel rounded-3xl p-8 md:p-14 animate-fadeInUp relative overflow-hidden">
+
+            <!-- 報名截止覆蓋層（10人熔斷）-->
+            <div id="closed-overlay" class="closed-overlay">
+                <div class="w-16 h-16 rounded-full border border-[#D4B78F]/30 flex items-center justify-center mb-6">
+                    <i class="fa-solid fa-lock text-[#D4B78F] text-xl"></i>
+                </div>
+                <h3 class="text-2xl font-serif text-[#D4B78F] tracking-[0.2em] mb-4">報名截止</h3>
+                <p class="text-[#5C5547] text-xs tracking-widest leading-loose">本場次名額已全數額滿<br>感謝各位的熱情參與</p>
+                <a href="https://line.me/ti/g/NPayXcjfUr" target="_blank"
+                   class="mt-8 px-8 py-3 btn-gold rounded-full text-xs tracking-[0.3em] font-bold uppercase">
+                    加入群組 接收下次開課通知
+                </a>
+            </div>
+
+            <form id="bookingForm" novalidate class="space-y-10">
+                <section class="space-y-8">
                     <div class="flex items-center gap-4 mb-2">
                         <span class="text-[#D4B78F] font-serif text-2xl opacity-50 italic">Registration
                             <span class="text-sm font-sans not-italic ml-2 opacity-80">填寫報名資料</span>
@@ -189,14 +428,16 @@
                     </div>
 
                     <!-- 姓名 / 電話 -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div class="space-y-3">
                             <label class="text-[10px] tracking-[0.3em] text-[#8A8068] flex justify-between uppercase font-medium">
                                 <span>姓名 / Name</span>
                                 <span class="text-[#8B0000] opacity-80 font-bold tracking-widest">*必填</span>
                             </label>
+                            <!-- 骨架 -->
+                            <div id="sk-name" class="skeleton skeleton-block rounded-xl"></div>
                             <input type="text" name="name" id="reg-name" required autocomplete="name"
-                                class="w-full px-5 py-4 rounded-xl text-sm" placeholder="請輸入姓名">
+                                class="w-full px-5 py-4 rounded-xl text-sm" placeholder="請輸入姓名" style="display:none">
                             <p class="error-msg" id="err-reg-name">請輸入姓名</p>
                         </div>
                         <div class="space-y-3">
@@ -204,8 +445,9 @@
                                 <span>聯絡電話 / Phone</span>
                                 <span class="text-[#8B0000] opacity-80 font-bold tracking-widest">*必填</span>
                             </label>
+                            <div id="sk-phone" class="skeleton skeleton-block rounded-xl"></div>
                             <input type="tel" name="phone" id="reg-phone" required autocomplete="tel" inputmode="numeric"
-                                class="w-full px-5 py-4 rounded-xl text-sm" placeholder="09xxxxxxxx">
+                                class="w-full px-5 py-4 rounded-xl text-sm" placeholder="09xxxxxxxx" style="display:none">
                             <p class="error-msg" id="err-reg-phone">請輸入有效的手機號碼（09 開頭，共 10 碼）</p>
                         </div>
                     </div>
@@ -216,25 +458,29 @@
                             <span>電子郵件 / Email</span>
                             <span class="text-[#8B0000] opacity-80 font-bold tracking-widest">*必填</span>
                         </label>
+                        <div id="sk-email" class="skeleton skeleton-block rounded-xl"></div>
                         <input type="email" name="email" id="reg-email" required autocomplete="email"
-                            class="w-full px-5 py-4 rounded-xl text-sm" placeholder="將用於寄送確認信與通知">
+                            class="w-full px-5 py-4 rounded-xl text-sm" placeholder="將用於寄送確認信與通知" style="display:none">
                         <p class="error-msg" id="err-reg-email">請輸入有效的 Email 格式</p>
                     </div>
 
-                    <!-- 課程資訊：動態顯示，不讓使用者自選 -->
+                    <!-- 課程資訊（動態） -->
                     <div class="space-y-3">
                         <label class="text-[10px] tracking-[0.3em] text-[#8A8068] uppercase font-medium">課程場次 / Course Info</label>
-                        <!-- 顯示用（純展示） -->
-                        <div id="course-display" class="course-info-display text-[#D4B78F]">載入中...</div>
-                        <!-- 隱藏欄位，傳送到 GAS（由 JS 自動填入） -->
+                        <div id="sk-course" class="skeleton skeleton-block rounded-xl"></div>
+                        <div id="course-display" class="course-info-display text-[#D4B78F]" style="display:none">載入中...</div>
                         <input type="hidden" name="course" id="hidden-course">
+                        <!-- UTM 隱藏欄位 -->
+                        <input type="hidden" name="utm_source"   id="utm_source">
+                        <input type="hidden" name="utm_medium"   id="utm_medium">
+                        <input type="hidden" name="utm_campaign" id="utm_campaign">
                     </div>
 
                     <!-- 繳費同意 checkbox -->
                     <div class="pt-6 border-t border-[#2A251B]/50">
-                        <label class="flex items-start gap-5 cursor-pointer group">
+                        <div id="sk-checkbox" class="skeleton rounded-xl" style="height:3.5rem"></div>
+                        <label id="checkbox-wrap" class="flex items-start gap-5 cursor-pointer group" style="display:none">
                             <div class="mt-1">
-                                <!-- name="payment" value="現金繳費"：勾選後 GAS 收到「現金繳費」 -->
                                 <input type="checkbox" name="payment" id="reg-agreement" value="現金繳費" required class="ring-offset-black">
                             </div>
                             <div class="space-y-1">
@@ -248,17 +494,29 @@
                     </div>
                 </section>
 
-                <div class="pt-8">
-                    <button type="submit" id="submitBtn" class="w-full btn-gold py-6 rounded-2xl text-sm font-bold tracking-[0.5em] uppercase shadow-2xl">
+                <div class="pt-6">
+                    <!-- 骨架屏按鈕 -->
+                    <div id="sk-btn" class="skeleton rounded-2xl" style="height:4rem"></div>
+
+                    <!-- 正式按鈕（初始隱藏） -->
+                    <button type="submit" id="submitBtn" class="w-full btn-gold py-6 rounded-2xl text-sm font-bold tracking-[0.5em] uppercase shadow-2xl" style="display:none" disabled>
                         確認提交報名
                     </button>
+
+                    <!-- 🔥 即將額滿警示條 -->
+                    <div id="urgency-bar">
+                        <div class="urgency-text">
+                            🔥 報名熱烈，目前正取即將額滿，送出將進入候補排隊
+                        </div>
+                    </div>
+
                     <p class="text-center text-[9px] text-[#3A3225] mt-6 tracking-widest">© YUJINGJIA ART STUDIO EST. 2024</p>
                 </div>
             </form>
         </div>
     </main>
 
-    <!-- ═══ 額滿彈窗 ═══ -->
+    <!-- ═══ 額滿彈窗（5–9人）═══ -->
     <div id="full-modal" class="fixed inset-0 z-[100]" style="display:none;align-items:center;justify-content:center;padding:1.5rem">
         <div class="absolute inset-0 bg-black/90 backdrop-blur-xl"></div>
         <div class="bg-[#0D0C0B] border border-[#D4B78F]/30 rounded-[2rem] p-10 md:p-14 max-w-lg w-full relative shadow-[0_0_100px_rgba(0,0,0,1)] animate-fadeInUp modal-glow">
@@ -270,9 +528,9 @@
                 <div class="w-20 h-20 bg-gradient-to-br from-[#D4B78F] to-[#A38A6A] rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg">
                     <i class="fa-solid fa-bell text-[#12110F] text-2xl"></i>
                 </div>
-                <h3 class="text-2xl md:text-3xl font-serif text-[#D4B78F] mb-6 tracking-[0.2em]">本場次報名已額滿</h3>
+                <h3 id="full-modal-title" class="text-2xl md:text-3xl font-serif text-[#D4B78F] mb-6 tracking-[0.2em]">本場次報名已額滿</h3>
             </div>
-            <div class="text-[#A39171] text-sm md:text-base font-light leading-loose text-left space-y-4 mb-8">
+            <div id="full-modal-body" class="text-[#A39171] text-sm md:text-base font-light leading-loose text-left space-y-4 mb-8">
                 <p class="text-[#E8DCC4] border-b border-[#2A251B] pb-3">目前本場次報名已額滿，感謝你的關注與支持 🙏</p>
                 <p>如果你願意留下聯絡資訊，我們可以為你保留候補資格：</p>
                 <ul class="space-y-2 opacity-90">
@@ -324,20 +582,59 @@
         </div>
     </div>
 
+    <!-- ════════════════════════════════════════════════════════════
+         JavaScript — 核心邏輯
+    ════════════════════════════════════════════════════════════ -->
     <script>
     (() => {
         'use strict';
 
-        // ─── 設定區（只需修改這裡）─────────────────────────────────
+        // ─── ⚙️ 設定區 ──────────────────────────────────────────────
         const CONFIG = {
-            // ⚠️ 重新部署後換成新的網址
+            // ⚠️ 重新部署後換成新的 GAS 網址
             scriptURL: 'https://script.google.com/macros/s/AKfycbx0ZtWwShCgCMZYiEP3DCspfq-KXgx8l0fR9nC2xXbLzgVFCY0YuqFCN-VDowr-rYpt/exec',
             actions: {
                 CHECK_FULL: 'checkFull',
                 REGISTER:   'register',
                 WAITLIST:   'waitlist'
-            }
+            },
+            // 幾人時顯示「即將額滿」警示 (設為 MAX_SEATS - N)
+            URGENCY_THRESHOLD: 5,
+            // 熔斷人數（完全關閉）
+            FUSE_THRESHOLD: 10,
+            // 背景輪詢間隔（毫秒）
+            POLL_INTERVAL: 15000
         };
+
+        // ─── 解析 UTM ───────────────────────────────────────────────
+        function parseUTM() {
+            const params = new URLSearchParams(window.location.search);
+            document.getElementById('utm_source').value   = params.get('utm_source')   || '';
+            document.getElementById('utm_medium').value   = params.get('utm_medium')   || '';
+            document.getElementById('utm_campaign').value = params.get('utm_campaign') || '';
+        }
+
+        // ─── 骨架屏 → 真實 UI ────────────────────────────────────────
+        function revealUI() {
+            // 隱藏所有骨架屏
+            ['sk-name','sk-phone','sk-email','sk-course','sk-checkbox','sk-btn',
+             'sk-info-1','sk-info-2','sk-info-3'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = 'none';
+            });
+            // 顯示真實元素
+            ['reg-name','reg-phone','reg-email','course-display',
+             'checkbox-wrap','info-card-1','info-card-2','info-card-3',
+             'seats-status-wrap'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = '';
+            });
+            const btn = document.getElementById('submitBtn');
+            if (btn) {
+                btn.style.display = '';
+                btn.disabled = false;
+            }
+        }
 
         // ─── 驗證工具 ────────────────────────────────────────────────
         const Validator = {
@@ -397,12 +694,8 @@
 
         // ─── UI 工具 ─────────────────────────────────────────────────
         const UI = {
-            showModal(id) {
-                document.getElementById(id).style.display = 'flex';
-            },
-            hideModal(id) {
-                document.getElementById(id).style.display = 'none';
-            },
+            showModal(id) { document.getElementById(id).style.display = 'flex'; },
+            hideModal(id) { document.getElementById(id).style.display = 'none'; },
             setBtnLoading(btn, loading, defaultText) {
                 btn.disabled = loading;
                 btn.innerHTML = loading
@@ -431,28 +724,165 @@
             }
         };
 
-        // ─── 頁面載入：檢查名額 + 動態帶入課程資訊 ─────────────────
+        // ─── 廣告追蹤：觸發 Lead 事件 ────────────────────────────────
+        function fireLeadEvent(status) {
+            try {
+                // Meta Pixel Lead 事件
+                if (typeof fbq === 'function') {
+                    fbq('track', 'Lead', { content_name: status });
+                }
+                // TikTok Pixel Lead 事件
+                if (typeof ttq !== 'undefined' && typeof ttq.track === 'function') {
+                    ttq.track('SubmitForm', { content_name: status });
+                }
+            } catch(e) {
+                console.warn('[Pixel] 事件觸發失敗', e);
+            }
+        }
+
+        // ─── 名額狀態 UI 更新（進度條 + 警示條）────────────────────
+        let cachedMaxSeats = 10; // 預設值，API 回傳後覆蓋
+
+        function updateSeatsUI(remaining, maxSeats) {
+            cachedMaxSeats = maxSeats || cachedMaxSeats;
+            const used = cachedMaxSeats - remaining;
+            const pct  = Math.min(100, Math.round((used / cachedMaxSeats) * 100));
+
+            // 進度條
+            const bar  = document.getElementById('seats-bar-fill');
+            const lbl  = document.getElementById('seats-label');
+            if (bar) bar.style.width = pct + '%';
+            if (lbl) lbl.textContent = `剩餘 ${remaining} 席`;
+
+            // 🔥 即將額滿警示條
+            const urgencyBar = document.getElementById('urgency-bar');
+            if (remaining <= 0) {
+                urgencyBar.classList.remove('show');
+            } else if (remaining <= (cachedMaxSeats - CONFIG.URGENCY_THRESHOLD)) {
+                urgencyBar.classList.add('show');
+            } else {
+                urgencyBar.classList.remove('show');
+            }
+        }
+
+        // ─── 三段式狀態處理 ──────────────────────────────────────────
+        // state: 'open' | 'full' | 'closed'
+        function applyState(data, isPolling = false) {
+            const remaining = data.remaining ?? 0;
+            const maxSeats  = Number(data.maxSeats || cachedMaxSeats);
+
+            updateSeatsUI(remaining, maxSeats);
+
+            // ① 10人熔斷 — 完全關閉
+            if (remaining === 0 && data.isFull && maxSeats >= CONFIG.FUSE_THRESHOLD) {
+                document.getElementById('closed-overlay').classList.add('show');
+                const btn = document.getElementById('submitBtn');
+                if (btn) btn.disabled = true;
+                return;
+            }
+
+            // ② 額滿（5–9人）— 彈出候補 Modal
+            if (data.isFull) {
+                if (!isPolling) {
+                    // 初次載入直接彈窗
+                    UI.showModal('full-modal');
+                } else {
+                    // 輪詢中途額滿：更新按鈕文字 + 彈窗（若尚未開啟）
+                    const btn = document.getElementById('submitBtn');
+                    if (btn) {
+                        btn.textContent = '登記候補名額';
+                        btn.onclick = (e) => {
+                            e.preventDefault();
+                            UI.showModal('full-modal');
+                        };
+                    }
+                    const modal = document.getElementById('full-modal');
+                    if (modal.style.display !== 'flex') {
+                        // 更新話術：競爭性說明
+                        document.getElementById('full-modal-title').textContent = '席次已瞬間售罄';
+                        document.getElementById('full-modal-body').innerHTML = `
+                            <p class="text-[#E8DCC4] border-b border-[#2A251B] pb-3">
+                                由於剛才瞬間湧入多筆報名，最後席位已售罄。<br>
+                                系統已優先為您保留候補順位。
+                            </p>
+                            <p>請填寫候補資訊，一旦有名額釋出將第一時間通知您：</p>
+                            <ul class="space-y-2 opacity-90">
+                                <li class="flex items-start gap-3"><span class="text-[#D4B78F]">✦</span><span>候補依提交時間順序排列</span></li>
+                                <li class="flex items-start gap-3"><span class="text-[#D4B78F]">✦</span><span>遞補時我們將第一時間 Email 通知您</span></li>
+                            </ul>
+                        `;
+                        UI.showModal('full-modal');
+                    }
+                }
+                return;
+            }
+
+            // ③ 正常報名
+            const btn = document.getElementById('submitBtn');
+            if (btn) {
+                btn.textContent = '確認提交報名';
+                btn.onclick     = null; // 恢復 form submit
+            }
+        }
+
+        // ─── 背景輪詢（每 15 秒 + Focus 時觸發）───────────────────
+        let pollTimer    = null;
+        let isFirstLoad  = true;
+
+        async function pollStatus() {
+            try {
+                const data = await Api.checkFull();
+                if (!isFirstLoad) {
+                    applyState(data, true);
+                }
+            } catch(e) {
+                console.warn('[poll] 輪詢失敗，跳過', e.message);
+            }
+        }
+
+        function startPolling() {
+            pollTimer = setInterval(pollStatus, CONFIG.POLL_INTERVAL);
+        }
+
+        // 用戶 Focus 輸入框時立即輪詢一次
+        ['reg-name','reg-phone','reg-email'].forEach(id => {
+            document.getElementById(id)?.addEventListener('focus', () => {
+                if (!isFirstLoad) pollStatus();
+            });
+        });
+
+        // ─── 頁面初始化 ──────────────────────────────────────────────
         window.addEventListener('DOMContentLoaded', async () => {
+            parseUTM();
+
             try {
                 const data = await Api.checkFull();
 
-                // 動態更新課程資訊顯示
+                // 動態課程資訊
                 const courseText = `${data.courseName}｜${data.courseDate}｜${data.coursePrice}`;
-                const display = document.getElementById('course-display');
-                const hidden  = document.getElementById('hidden-course');
+                const display    = document.getElementById('course-display');
+                const hidden     = document.getElementById('hidden-course');
                 if (display) display.textContent = courseText;
                 if (hidden)  hidden.value = courseText;
 
-                // 動態更新頁面標題
+                // 更新頁面標題
                 const heroTitle = document.getElementById('hero-title');
                 if (heroTitle && data.courseName) heroTitle.textContent = data.courseName;
 
-                // 如果額滿，顯示額滿彈窗
-                if (data.isFull) UI.showModal('full-modal');
+                // 顯示骨架屏 → 真實 UI
+                revealUI();
+                isFirstLoad = false;
 
-            } catch (e) {
-                // 查詢失敗靜默處理，不阻擋使用者填表
-                console.warn('[checkFull] 無法取得名額狀態，跳過檢查。', e.message);
+                // 套用名額狀態
+                applyState(data, false);
+
+                // 啟動輪詢
+                startPolling();
+
+            } catch(e) {
+                console.warn('[init] 初始化失敗，靜默降級', e.message);
+                revealUI();
+                isFirstLoad = false;
                 const display = document.getElementById('course-display');
                 if (display) display.textContent = '神明花基礎課程（課程資訊載入中）';
             }
@@ -479,6 +909,7 @@
 
             try {
                 await Api.post(fd);
+                fireLeadEvent('候補');
                 UI.hideModal('full-modal');
                 UI.showResult({
                     title: '已列入候補',
@@ -486,7 +917,7 @@
                     icon:  'fa-solid fa-envelope-open-text text-[#12110F] text-2xl'
                 });
                 waitlistForm.reset();
-            } catch (err) {
+            } catch(err) {
                 console.error('[waitlist] 送出失敗', err.message);
                 alert('送出失敗，請檢查網路或聯繫官方 LINE。');
                 UI.setBtnLoading(waitlistBtn, false, '登記候補資格');
@@ -513,20 +944,23 @@
 
             try {
                 const data = await Api.post(fd);
+
                 if (data.status === '🔸備取') {
+                    fireLeadEvent('候補');
                     UI.showResult({
                         title: '候補登記成功',
                         desc:  '<p class="text-center">您已列入候補名單，候補確認信已寄至您的信箱。<br>一旦有名額釋出將依序優先通知您。</p>',
                         icon:  'fa-solid fa-envelope-open-text text-[#12110F] text-2xl'
                     });
                 } else {
+                    fireLeadEvent('正取');
                     UI.showResult({
                         title: '報名正式成功',
                         desc:  '<p class="text-center">恭喜您成功報名！確認信已寄發，名額已為您保留。<br>請於當天攜帶現金至現場繳費。</p>',
                         icon:  'fa-solid fa-check text-[#12110F] text-2xl'
                     });
                 }
-            } catch (err) {
+            } catch(err) {
                 console.error('[register] 送出失敗', err.message);
                 alert('提交失敗，請檢查網路或聯繫官方 LINE。');
                 UI.setBtnLoading(submitBtn, false, '確認提交報名');
