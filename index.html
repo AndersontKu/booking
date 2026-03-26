@@ -269,9 +269,9 @@
                 </div>
             </div>
             <div class="flex gap-4 md:gap-6 text-[10px] md:text-xs tracking-[0.3em] text-[#A39171] uppercase font-light">
-                <a href="https://line.me/ti/g/NPayXcjfUr" target="_blank" rel="noopener noreferrer"
+                <a href="https://linevoom.line.me/user/_dbgtYOPJUTMZlbNa9Mm_f8TqVzqo-BymL6uHW1M" target="_blank" rel="noopener noreferrer"
                    class="hover:text-[#D4B78F] transition-all duration-300 flex items-center gap-2">
-                    <i class="fa-brands fa-line text-sm"></i> 加入群組
+                    <i class="fa-brands fa-line text-sm"></i> 加入官方帳號
                 </a>
             </div>
         </div>
@@ -353,9 +353,9 @@
                     下次開課我們會第一時間通知您，<br>
                     期待有機會與您在花香中相聚。
                 </p>
-                <a href="https://line.me/ti/g/NPayXcjfUr" target="_blank"
+                <a href="https://linevoom.line.me/user/_dbgtYOPJUTMZlbNa9Mm_f8TqVzqo-BymL6uHW1M" target="_blank"
                    class="mt-2 px-8 py-3 btn-gold rounded-full text-xs tracking-[0.3em] font-bold uppercase">
-                    🌺 加入群組・優先收到下次開課通知
+                    🌺 加入官方帳號・優先收到下次開課通知
                 </a>
             </div>
 
@@ -587,12 +587,12 @@
                 </button>
                 <p class="text-center text-[9px] text-[#3A3225] tracking-wider">留下資料後系統將自動寄送確認信至您的信箱</p>
             </form>
-            <!-- LINE 群組連結（備用）-->
+            <!-- LINE 官方帳號連結（備用）-->
             <div class="mt-6 pt-5 border-t border-[#2A251B]/50 text-center">
-                <p class="text-[#5C5547] text-[10px] tracking-wider mb-3">或加入官方 LINE 群組直接掌握最新消息</p>
-                <a href="https://line.me/ti/g/NPayXcjfUr" target="_blank" rel="noopener noreferrer"
+                <p class="text-[#5C5547] text-[10px] tracking-wider mb-3">或加入官方 LINE 帳號直接掌握最新消息</p>
+                <a href="https://linevoom.line.me/user/_dbgtYOPJUTMZlbNa9Mm_f8TqVzqo-BymL6uHW1M" target="_blank" rel="noopener noreferrer"
                    class="inline-flex items-center gap-2 text-[#D4B78F] text-xs hover:opacity-80 transition-opacity">
-                    <i class="fa-brands fa-line text-base"></i> 加入御景家 LINE 群組
+                    <i class="fa-brands fa-line text-base"></i> 加入御景家官方帳號
                 </a>
             </div>
         </div>
@@ -601,13 +601,23 @@
     <!-- ═══ 成功 / 候補彈窗 ═══ -->
     <div id="success-modal" class="fixed inset-0 z-[100]" style="display:none;align-items:center;justify-content:center;padding:1.5rem">
         <div class="absolute inset-0 bg-black/90 backdrop-blur-xl"></div>
-        <div class="bg-[#0D0C0B] border border-[#D4B78F]/30 rounded-[2rem] p-10 md:p-14 max-w-lg w-full relative text-center shadow-[0_0_100px_rgba(0,0,0,1)] animate-fadeInUp modal-glow">
+        <div class="bg-[#0D0C0B] border border-[#D4B78F]/30 rounded-[2rem] p-10 md:p-14 max-w-lg w-full relative text-center shadow-[0_0_100px_rgba(0,0,0,1)] animate-fadeInUp modal-glow modal-scroll">
             <div class="w-20 h-20 bg-gradient-to-br from-[#D4B78F] to-[#A38A6A] rounded-full flex items-center justify-center mx-auto mb-10 shadow-lg">
                 <i id="modalIcon" class="fa-solid fa-check text-[#12110F] text-2xl"></i>
             </div>
             <h3 id="modalTitle" class="text-2xl md:text-3xl font-serif text-[#D4B78F] mb-6 tracking-[0.2em]">報名已受理</h3>
-            <div id="modalDesc" class="text-[#A39171] text-sm font-light leading-loose mb-12 text-left space-y-4"></div>
-            <button onclick="location.reload()" class="w-full py-5 btn-gold rounded-xl tracking-[0.4em] text-xs font-bold uppercase">確認</button>
+            <div id="modalDesc" class="text-[#A39171] text-sm font-light leading-loose mb-8 text-left space-y-4"></div>
+            <!-- LINE 官方帳號 CTA（正取/備取成功後顯示）-->
+            <div class="mb-8 pt-5 border-t border-[#2A251B]/50">
+                <p class="text-[#A39171] text-[11px] tracking-wider mb-4">加入官方帳號，掌握最新課程動態與花藝分享</p>
+                <a href="https://linevoom.line.me/user/_dbgtYOPJUTMZlbNa9Mm_f8TqVzqo-BymL6uHW1M"
+                   target="_blank" rel="noopener noreferrer"
+                   class="w-full inline-flex items-center justify-center gap-3 py-4 rounded-2xl text-sm font-bold tracking-[0.3em] uppercase shadow-lg transition-all duration-300"
+                   style="background:linear-gradient(135deg,#06C755,#04a347);color:#fff;">
+                    <i class="fa-brands fa-line text-lg"></i> 立即加入 LINE 官方帳號
+                </a>
+            </div>
+            <button onclick="location.reload()" class="w-full py-4 border border-[#2A251B] rounded-xl tracking-[0.3em] text-xs text-[#5C5547] hover:text-[#D4B78F] hover:border-[#D4B78F]/30 transition-all duration-300 uppercase">關閉</button>
         </div>
     </div>
 
@@ -619,7 +629,7 @@
         // ⚙️ 設定區 — 只需修改這裡
         // ════════════════════════════════════════════
         const CONFIG = {
-            scriptURL: 'https://script.google.com/macros/s/AKfycby09eoQUeOujXl-g7g0SEWnbW20nhfxOew5vbPFJ81R5bLOX4HwahC8li3lf5hdRDhAuQ/exec',
+            scriptURL: 'https://script.google.com/macros/s/AKfycbx0ZtWwShCgCMZYiEP3DCspfq-KXgx8l0fR9nC2xXbLzgVFCY0YuqFCN-VDowr-rYpt/exec',
             actions: { CHECK_FULL:'checkFull', REGISTER:'register', WAITLIST:'waitlist' },
             URGENCY_THRESHOLD: 3,   // 剩餘 ≤ N 席顯示緊迫警示
             FUSE_THRESHOLD:   10,   // 正取達此人數完全關閉（等於 FUSE_SEATS）
@@ -703,16 +713,28 @@
         // ── API ──
         const Api = {
             async checkFull(){
-                const res = await fetch(`${CONFIG.scriptURL}?action=${CONFIG.actions.CHECK_FULL}`);
+                const res = await fetch(`${CONFIG.scriptURL}?action=${CONFIG.actions.CHECK_FULL}`, {
+                    redirect: 'follow',
+                    cache: 'no-cache'
+                });
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                const data = await res.json();
+                const text = await res.text();
+                let data;
+                try { data = JSON.parse(text); }
+                catch(e) { throw new Error('回應格式錯誤，請確認 GAS 已重新部署'); }
                 if (data.result === 'error') throw new Error('GAS: ' + data.message);
                 return data;
             },
             async post(fd){
-                const res = await fetch(CONFIG.scriptURL, {method:'POST', body:fd});
+                const res = await fetch(CONFIG.scriptURL, {
+                    method: 'POST',
+                    body: fd,
+                    redirect: 'follow'
+                });
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                return res.json();
+                const text = await res.text();
+                try { return JSON.parse(text); }
+                catch(e) { throw new Error('回應格式錯誤'); }
             }
         };
 
@@ -890,12 +912,13 @@
         bookingForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             if (regSubmitting) return;
-            // Session 提交鎖（防重複快速點擊）
+            // 先做表單驗證，未填寫時顯示錯誤提示
+            if (!Validator.validateRegForm()) return;
+            // Session 提交鎖：只有在驗證通過後才檢查（防重複快速點擊）
             if (sessionStorage.getItem('reg_submitted') === '1') {
                 alert('您已送出過報名，請勿重複提交。\n如有疑問請聯繫官方 LINE。');
                 return;
             }
-            if (!Validator.validateRegForm()) return;
             regSubmitting = true;
             UI.setBtnLoading(submitBtn, true, '確認提交報名');
             const fd = new FormData(bookingForm);
