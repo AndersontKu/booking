@@ -1,469 +1,947 @@
-// ============================================================
-// 御景家 神明花課程報名系統 — Google Apps Script 完整版 v9
-// ============================================================
-//
-// 【報名資料】分頁標題列（A1 起）：
-//  A:時間戳記 | B:場次 | C:課程名稱 | D:姓名 | E:電話 | F:Email
-//  G:狀態     | H:繳費方式 | I:utm_source | J:utm_medium | K:utm_campaign
-//
-// 【狀態值】 ✅正取 / 🔸備取 / ❌取消
-//
-// 【config 分頁 Key（A欄Key, B欄Value）】：
-//  COURSE_DATE   → 場次日期文字，例：2025/08/10（一）全天
-//  COURSE_NAME   → 課程名稱，例：神明花基礎班
-//  COURSE_PRICE  → 課程費用，例：NT$2,800
-//  MAX_SEATS     → 正取名額上限，例：5
-//  FUSE_SEATS    → 熔斷上限（完全關閉），例：10
-//  FORM_OPEN     → TRUE / FALSE（手動開關）
-//  ADMIN_EMAIL   → 管理員 Email（系統通知用）
-//
-// ════════════════════════════════════════════
-// 【表單重啟方式說明】
-//
-//  ✅ 建議方式（日期切換法）：
-//    在 config 分頁修改 COURSE_DATE → 系統自動：
-//    ① 重置 FORM_OPEN 為 TRUE
-//    ② 對新日期重新計算人數（舊資料保留不影響）
-//    ③ 在「場次總覽」新增紀錄
-//    ④ 寄通知信給管理員
-//
-//  補充說明：
-//    同時也可修改 COURSE_NAME、COURSE_PRICE、MAX_SEATS
-//    讓新場次有不同名稱/費用/名額
-//
-//  手動重開（不改日期）：
-//    直接把 FORM_OPEN 改回 TRUE 即可
-//    但人數延續舊場次計算，建議一定要搭配改日期使用
-// ════════════════════════════════════════════
-//
-// 【觸發器設定（需手動在 GAS 新增，共兩個）】
-//  ① 函式：onStatusEdit  | 事件來源：試算表 | 事件類型：編輯時
-//  ② 函式：onConfigEdit  | 事件來源：試算表 | 事件類型：編輯時
-//
-// 【首次部署 & 每次改完程式碼的步驟】
-//  1. 貼上程式碼到 GAS 編輯器（script.google.com）
-//  2. 右上角「部署」→「新增部署作業」
-//     類型：「網頁應用程式」
-//     執行身份：「我自己」
-//     存取權限：「所有人」
-//  3. 複製部署 URL，貼到 index.html 裡的 CONFIG.scriptURL
-//  4. ⚠️ 每次改完程式碼後必做：
-//     「部署」→「管理部署作業」→ 點鉛筆（編輯）
-//     → 版本選「建立新版本」→「部署」
-//  5. 在「觸發條件」設定兩個觸發器（只需設定一次）
-//  6. 手動執行一次 setupAttendanceSheet() 建立報到單
-// ============================================================
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>御景家＿神明花 | 神明花基礎課程報名</title>
+    <meta name="description" content="御景家＿神明花基礎課程正式開放報名。專為零基礎學員設計，由淺入深教學，親手完成精緻敬神花藝。立即預約名額。">
+    <meta name="keywords" content="御景家, 神明花, 敬神花, 花藝課程, 手作課程, 神明花報名">
+    <meta name="author" content="御景家 YUJINGJIA">
 
+    <!-- Open Graph / 廣告分享預覽 -->
+    <meta property="og:title" content="御景家＿神明花 | 基礎課程報名登記">
+    <meta property="og:description" content="專為零基礎設計的神明花手作課，名額有限，點擊進入報名系統預約席次。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content=""><!-- 由 JS 自動填入當前網址 -->
+    <meta property="og:image" content="https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&q=80&w=1200">
+    <!-- 建議換成自有圖片（1200×630px）以確保 FB/IG 廣告預覽圖正確顯示 -->
 
-// ─── 讀取 config ─────────────────────────────────────────────
-function getConfig() {
-  var sheet  = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('config');
-  var data   = sheet.getDataRange().getValues();
-  var config = {};
-  data.forEach(function(row) {
-    if (row[0]) config[String(row[0]).trim()] = String(row[1]).trim();
-  });
-  return config;
-}
+    <!-- 廣告安全：Referrer Policy
+         廣告像素需要 referrer 追蹤，此設定可追蹤但不洩漏完整 URL 參數 -->
+    <meta name="referrer" content="origin-when-cross-origin">
 
+    <!-- Content Security Policy：限制 script 來源，防惡意注入
+         若有其他第三方 script 來源請在 script-src 補上 -->
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self' https:;
+                   script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdnjs.cloudflare.com https://connect.facebook.net https://analytics.tiktok.com;
+                   style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
+                   font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com;
+                   img-src 'self' data: https:;
+                   connect-src 'self' https://script.google.com https://script.googleusercontent.com;">
 
-// ─── 共用 JSON 回傳 ───────────────────────────────────────────
-function jsonResponse(obj) {
-  return ContentService
-    .createTextOutput(JSON.stringify(obj))
-    .setMimeType(ContentService.MimeType.JSON);
-}
+    <!-- FB 域名驗證（取得驗證碼後取消註解並填入，沒有也不影響廣告投放）
+    <meta name="facebook-domain-verification" content="填入你的驗證碼"> -->
 
+    <!-- TikTok 域名驗證（取得驗證碼後取消註解並填入）
+    <meta name="tiktok-domain-verification" content="填入你的驗證碼"> -->
 
-// ─── 計算指定場次正取人數 ─────────────────────────────────────
-// 依傳入 courseDate 篩選，不同日期獨立計算
-// → 修改 config 的 COURSE_DATE，人數自動對新場次重新計算
-function getRegCount(courseDate) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('報名資料');
-  var data  = sheet.getDataRange().getValues();
-  return data.slice(1).filter(function(row) {
-    return row[1] === courseDate && row[6] === '✅正取';
-  }).length;
-}
+    <!-- ═══ Meta Pixel（有 Pixel ID 後取消整段註解）═══ -->
+    <!--
+    <script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+    document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '填入你的FB_PIXEL_ID');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=填入你的FB_PIXEL_ID&ev=PageView&noscript=1"/></noscript>
+    -->
 
+    <!-- ═══ TikTok Pixel（有 Pixel ID 後取消整段註解）═══ -->
+    <!--
+    <script>
+    !function (w, d, t) {
+      w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];
+      ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"];
+      ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};
+      for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);
+      ttq.load('填入你的TIKTOK_PIXEL_ID');
+      ttq.page();
+    }(window, document, 'ttq');
+    </script>
+    -->
 
-// ─── 安全：輸入格式後端驗證 ──────────────────────────────────
-function isValidPhone(phone) {
-  return /^09\d{8}$/.test(String(phone).replace(/[-\s]/g, ''));
-}
-function isValidEmail(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(email).trim());
-}
-function isValidName(name) {
-  var n = String(name).trim();
-  return n.length >= 1 && n.length <= 30;
-}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+    <style>
+        :root {
+            --brand-gold: #D4B78F;
+            --brand-gold-dark: #A38A6A;
+            --brand-black: #0D0C0B;
+            --brand-accent: #2A251B;
+            --brand-text: #E8DCC4;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--brand-black);
+            color: var(--brand-text);
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .bg-pattern {
+            background-color: var(--brand-black);
+            background-image:
+                radial-gradient(circle at 2px 2px, rgba(212,183,143,0.03) 1px, transparent 0),
+                radial-gradient(circle at 50% 50%, rgba(212,183,143,0.05) 0%, transparent 50%);
+            background-size: 40px 40px, 100% 100%;
+        }
 
-// ─── 安全：Sanitize 輸入 ─────────────────────────────────────
-function sanitize(str) {
-  return String(str || '').replace(/[<>"'`\\]/g, '').trim();
-}
+        /* ─── Skeleton ─── */
+        .skeleton {
+            background: linear-gradient(90deg, #1a1814 25%, #262219 50%, #1a1814 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.6s infinite;
+            border-radius: 0.5rem;
+        }
+        @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+        .skeleton-text  { height:1em; width:60%; margin-bottom:0.4em; }
+        .skeleton-block { height:3.5rem; width:100%; }
+        .skeleton-info  { height:5rem; width:100%; }
 
+        /* ─── Info Glass ─── */
+        .info-glass {
+            background: rgba(22,20,18,0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(212,183,143,0.12);
+            border-radius: 1rem;
+            padding: 1.25rem 1.5rem;
+            transition: border-color 0.4s ease;
+        }
+        .info-glass:hover { border-color: rgba(212,183,143,0.25); }
+        .info-glass-icon {
+            display:inline-flex; align-items:center; justify-content:center;
+            width:2rem; height:2rem;
+            border:1px solid rgba(212,183,143,0.3); border-radius:50%;
+            font-size:0.75rem; color:var(--brand-gold);
+            flex-shrink:0; margin-right:0.75rem;
+        }
+        .info-glass-title {
+            font-size:0.65rem; letter-spacing:0.3em; color:var(--brand-gold);
+            text-transform:uppercase; font-weight:500; margin-bottom:0.6rem;
+            display:flex; align-items:center;
+        }
+        .info-glass-body { font-size:0.75rem; line-height:1.9; color:#A39171; letter-spacing:0.05em; }
+        .info-glass-body li { padding-left:1em; position:relative; }
+        .info-glass-body li::before { content:'·'; position:absolute; left:0; color:var(--brand-gold); }
 
-// ─── 安全：Rate Limit（同 Email 60 秒限一次）─────────────────
-var RATE_LIMIT_SECONDS = 60;
-function isRateLimited(email) {
-  var props = PropertiesService.getScriptProperties();
-  var key   = 'rl_' + email.replace(/[^a-z0-9]/gi, '_');
-  var last  = props.getProperty(key);
-  if (last && (Date.now() - Number(last)) / 1000 < RATE_LIMIT_SECONDS) return true;
-  props.setProperty(key, String(Date.now()));
-  return false;
-}
+        /* ─── Inputs ─── */
+        input, select, textarea {
+            background-color: rgba(23,21,18,0.8) !important;
+            border: 1px solid var(--brand-accent) !important;
+            color: var(--brand-text) !important;
+            transition: all 0.4s cubic-bezier(0.4,0,0.2,1) !important;
+            backdrop-filter: blur(5px);
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--brand-gold) !important;
+            box-shadow: 0 0 15px rgba(212,183,143,0.15) !important;
+            background-color: rgba(30,27,23,1) !important;
+            outline: none; transform: translateY(-1px);
+        }
+        input.field-error { border-color:#8B0000!important; box-shadow:0 0 8px rgba(139,0,0,0.2)!important; }
+        .error-msg { color:#c0392b; font-size:0.68rem; margin-top:4px; letter-spacing:0.05em; display:none; }
+        .error-msg.visible { display:block; }
 
+        /* ─── Buttons ─── */
+        .btn-gold {
+            position:relative;
+            background: linear-gradient(135deg, var(--brand-gold) 0%, var(--brand-gold-dark) 100%);
+            color:#12110F; overflow:hidden;
+            transition: all 0.5s cubic-bezier(0.19,1,0.22,1);
+            border:none; cursor:pointer;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+        .btn-gold::after {
+            content:''; position:absolute; top:-50%; left:-60%;
+            width:25%; height:200%; background:rgba(255,255,255,0.3);
+            transform:rotate(30deg); transition:all 0.8s cubic-bezier(0.19,1,0.22,1);
+            pointer-events:none;
+        }
+        .btn-gold:hover:not(:disabled) {
+            filter:brightness(1.1); letter-spacing:0.2em;
+            box-shadow:0 15px 35px rgba(212,183,143,0.25); transform:translateY(-2px);
+        }
+        .btn-gold:disabled { opacity:0.6; cursor:not-allowed; }
+        .btn-spinner {
+            display:inline-block; width:14px; height:14px;
+            border:2px solid rgba(18,17,15,0.3); border-top-color:#12110F;
+            border-radius:50%; animation:spin 0.7s linear infinite;
+            vertical-align:middle; margin-right:8px;
+        }
+        @keyframes spin { to{transform:rotate(360deg)} }
 
-// ─── 防重複：同場次同電話或同 Email 不可重複 ─────────────────
-function isDuplicate(courseDate, phone, email) {
-  var sheet   = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('報名資料');
-  var data    = sheet.getDataRange().getValues();
-  var cleanPh = String(phone).replace(/[-\s]/g, '');
-  var cleanEm = String(email).trim().toLowerCase();
-  return data.slice(1).some(function(row) {
-    return row[1] === courseDate &&
-           row[6] !== '❌取消' &&
-           (String(row[4]).replace(/[-\s]/g,'') === cleanPh ||
-            String(row[5]).trim().toLowerCase()  === cleanEm);
-  });
-}
+        .glass-panel {
+            background: rgba(22,20,18,0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(212,183,143,0.1);
+            box-shadow: 0 40px 100px -20px rgba(0,0,0,0.7);
+            isolation: isolate;
+        }
 
+        @keyframes borderGlow {
+            0%,100%{border-color:rgba(212,183,143,0.5);box-shadow:0 0 20px rgba(212,183,143,0.1);}
+            50%{border-color:rgba(212,183,143,0.1);box-shadow:0 0 5px rgba(212,183,143,0);}
+        }
+        .modal-glow { animation:borderGlow 4s infinite ease-in-out; }
 
-// ─── GET：前端載入 ?action=checkFull ─────────────────────────
-// 修復：全函式包 try/catch，永遠回 JSON，不再回空頁（「載入中」的根本原因）
-function doGet(e) {
-  try {
-    var action = (e && e.parameter && e.parameter.action) ? e.parameter.action : '';
+        @keyframes fadeInUp {
+            from{opacity:0;transform:translateY(30px);}
+            to{opacity:1;transform:translateY(0);}
+        }
+        .animate-fadeInUp { animation:fadeInUp 1.2s cubic-bezier(0.16,1,0.3,1) forwards; }
 
-    if (action === 'checkFull') {
-      var config    = getConfig();
-      var maxSeats  = Number(config.MAX_SEATS  || 5);
-      var fuseSeats = Number(config.FUSE_SEATS || 10);
+        /* ─── Urgency bar ─── */
+        #urgency-bar { display:none; overflow:hidden; }
+        #urgency-bar.show { display:block; }
+        @keyframes urgencyPulse { 0%,100%{opacity:1;} 50%{opacity:0.6;} }
+        .urgency-text {
+            animation:urgencyPulse 1.5s infinite ease-in-out;
+            font-size:0.72rem; letter-spacing:0.08em; color:#FF7A35;
+            text-align:center; padding:0.6rem 1rem;
+            background:rgba(255,122,53,0.08); border:1px solid rgba(255,122,53,0.25);
+            border-radius:0.75rem; margin-top:0.75rem;
+        }
 
-      if (String(config.FORM_OPEN).toUpperCase() !== 'TRUE') {
-        return jsonResponse({
-          isFull:      true,
-          courseName:  config.COURSE_NAME  || '課程名稱',
-          courseDate:  config.COURSE_DATE  || '日期待定',
-          coursePrice: config.COURSE_PRICE || '費用待定',
-          maxSeats:    maxSeats,
-          fuseSeats:   fuseSeats,
-          remaining:   0
+        /* ─── Seats bar ─── */
+        .seats-bar-wrap { height:3px; background:rgba(255,255,255,0.06); border-radius:2px; overflow:hidden; margin-top:0.5rem; }
+        .seats-bar-fill { height:100%; border-radius:2px; background:linear-gradient(90deg,var(--brand-gold),#FF7A35); transition:width 1s cubic-bezier(0.4,0,0.2,1); }
+
+        .course-info-display {
+            background-color:rgba(23,21,18,0.8); border:1px solid var(--brand-accent);
+            color:var(--brand-text); border-radius:0.75rem;
+            padding:1rem 1.25rem; font-size:0.875rem; letter-spacing:0.05em;
+        }
+
+        #closed-overlay {
+            display:none; position:absolute; inset:0;
+            background:rgba(13,12,11,0.92);
+            backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+            border-radius:1.5rem; z-index:10;
+            align-items:center; justify-content:center;
+            flex-direction:column; text-align:center; padding:2rem;
+            pointer-events:none;
+        }
+        #closed-overlay.show { display:flex; pointer-events:auto; }
+
+        #form-submit-zone {
+            position:relative; z-index:5;
+            padding-top:1.5rem;
+            padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+        }
+
+        input[type="checkbox"] { width:18px; height:18px; cursor:pointer; accent-color:var(--brand-gold); }
+        .tracking-premium { letter-spacing:0.3em; }
+
+        /* ─── 隱私政策彈窗滾動 ─── */
+        .modal-scroll { max-height:85vh; overflow-y:auto; }
+        .modal-scroll::-webkit-scrollbar { width:4px; }
+        .modal-scroll::-webkit-scrollbar-track { background:transparent; }
+        .modal-scroll::-webkit-scrollbar-thumb { background:rgba(212,183,143,0.3); border-radius:2px; }
+    </style>
+</head>
+
+<body class="bg-pattern min-h-screen">
+
+    <!-- ═══ Nav ═══ -->
+    <nav class="sticky top-0 z-50 bg-[#0D0C0B]/80 backdrop-blur-xl border-b border-[#2A251B]/50">
+        <div class="max-w-4xl mx-auto px-6 py-5 flex justify-between items-center">
+            <div class="flex items-center gap-4 group cursor-pointer">
+                <div class="w-9 h-9 rounded-sm border border-[#D4B78F]/40 flex items-center justify-center transition-all duration-700 group-hover:border-[#D4B78F] group-hover:rotate-45">
+                    <span class="text-[#D4B78F] font-serif font-bold text-lg group-hover:-rotate-45 transition-all duration-700">御</span>
+                </div>
+                <div class="flex flex-col">
+                    <h1 class="text-xl font-serif tracking-premium text-[#D4B78F]">御景家</h1>
+                    <span class="text-[8px] tracking-[0.4em] text-[#5C5547] uppercase -mt-1 font-light">YUJINGJIA ART STUDIO</span>
+                </div>
+            </div>
+            <div class="flex gap-4 md:gap-6 text-[10px] md:text-xs tracking-[0.3em] text-[#A39171] uppercase font-light">
+                <a href="https://line.me/ti/g/NPayXcjfUr" target="_blank" rel="noopener noreferrer"
+                   class="hover:text-[#D4B78F] transition-all duration-300 flex items-center gap-2">
+                    <i class="fa-brands fa-line text-sm"></i> 加入群組
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ═══ Hero ═══ -->
+    <header class="relative h-[30vh] flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&q=80&w=1600')] bg-cover bg-center opacity-10 scale-110"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#0D0C0B]/80 to-[#0D0C0B]"></div>
+        <div class="relative text-center px-6 animate-fadeInUp">
+            <div class="inline-block px-4 py-1 border border-[#D4B78F]/20 rounded-full text-[9px] tracking-[0.4em] text-[#A39171] mb-4 uppercase">Exquisite Floral Class</div>
+            <h2 id="hero-title" class="text-3xl md:text-4xl font-serif tracking-[0.25em] text-[#D4B78F] mb-4">神明花基礎課程</h2>
+            <div class="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#D4B78F]/40 to-transparent mx-auto"></div>
+        </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto px-6 relative z-10"
+          style="padding-bottom: max(6rem, calc(4rem + env(safe-area-inset-bottom)));">
+
+        <!-- ═══ 說明區塊 ═══ -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div id="sk-info-1" class="info-glass">
+                <div class="info-glass-title"><div class="skeleton skeleton-text w-3/4"></div></div>
+                <div class="info-glass-body"><div class="skeleton skeleton-info"></div></div>
+            </div>
+            <div id="sk-info-2" class="info-glass">
+                <div class="info-glass-title"><div class="skeleton skeleton-text w-3/4"></div></div>
+                <div class="info-glass-body"><div class="skeleton skeleton-info" style="height:7rem"></div></div>
+            </div>
+            <div id="sk-info-3" class="info-glass">
+                <div class="info-glass-title"><div class="skeleton skeleton-text w-3/4"></div></div>
+                <div class="info-glass-body"><div class="skeleton skeleton-info"></div></div>
+            </div>
+            <div id="info-card-1" class="info-glass" style="display:none">
+                <div class="info-glass-title"><span class="info-glass-icon">📖</span>課程說明</div>
+                <div class="info-glass-body">本課程特別適合沒有手作經驗的學員。教學將從最基礎開始，步驟清楚、節奏輕鬆，讓您在輕鬆的氛圍中完成屬於自己的神明花。</div>
+            </div>
+            <div id="info-card-2" class="info-glass" style="display:none">
+                <div class="info-glass-title"><span class="info-glass-icon">📋</span>報名須知</div>
+                <ul class="info-glass-body space-y-1">
+                    <li>全天授課，依人數備料</li>
+                    <li>完成繳費後保留名額，開課後不退費</li>
+                    <li>材料當日發放，未出席不補發</li>
+                    <li>取消請於三日前告知</li>
+                </ul>
+            </div>
+            <div id="info-card-3" class="info-glass" style="display:none">
+                <div class="info-glass-title"><span class="info-glass-icon">💴</span>繳費方式</div>
+                <ul class="info-glass-body space-y-1">
+                    <li>現場現金繳費制</li>
+                    <li>課程當天攜帶現金完成</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ═══ 名額狀態條 ═══ -->
+        <div id="seats-status-wrap" class="mb-6 px-2" style="display:none">
+            <div class="flex justify-between items-center text-[10px] tracking-widest text-[#5C5547] uppercase mb-1">
+                <span>Seats Availability</span>
+                <span id="seats-label" class="text-[#D4B78F]"></span>
+            </div>
+            <div class="seats-bar-wrap">
+                <div class="seats-bar-fill" id="seats-bar-fill" style="width:0%"></div>
+            </div>
+        </div>
+
+        <!-- ═══ 主表單面板 ═══ -->
+        <div class="glass-panel rounded-3xl p-8 md:p-14 animate-fadeInUp relative">
+
+            <!-- 報名截止覆蓋層（熔斷/FUSE_SEATS 達到時顯示） -->
+            <div id="closed-overlay">
+                <div class="w-16 h-16 rounded-full border border-[#D4B78F]/30 flex items-center justify-center mb-6">
+                    <i class="fa-solid fa-lock text-[#D4B78F] text-xl"></i>
+                </div>
+                <h3 class="text-2xl font-serif text-[#D4B78F] tracking-[0.2em] mb-3">感謝您的熱情支持</h3>
+                <p class="text-[#A39171] text-xs tracking-widest leading-loose mb-2">本場次 10 位學員名額已全數額滿 🌸</p>
+                <p class="text-[#5C5547] text-xs tracking-wider leading-relaxed mb-6">
+                    每一個報名都讓我們備感溫暖。<br>
+                    下次開課我們會第一時間通知您，<br>
+                    期待有機會與您在花香中相聚。
+                </p>
+                <a href="https://line.me/ti/g/NPayXcjfUr" target="_blank"
+                   class="mt-2 px-8 py-3 btn-gold rounded-full text-xs tracking-[0.3em] font-bold uppercase">
+                    🌺 加入群組・優先收到下次開課通知
+                </a>
+            </div>
+
+            <form id="bookingForm" novalidate class="space-y-10">
+                <section class="space-y-8">
+                    <div class="flex items-center gap-4 mb-2">
+                        <span class="text-[#D4B78F] font-serif text-2xl opacity-50 italic">Registration
+                            <span class="text-sm font-sans not-italic ml-2 opacity-80">填寫報名資料</span>
+                        </span>
+                        <div class="h-[1px] flex-grow bg-gradient-to-r from-[#3A3225] to-transparent"></div>
+                    </div>
+
+                    <!-- Honeypot：機器人防護，使用者看不到此欄 -->
+                    <div aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;" tabindex="-1">
+                        <input type="text" name="_hp" id="_hp" autocomplete="off" tabindex="-1" placeholder="leave empty">
+                    </div>
+
+                    <!-- 姓名 / 電話 -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-3">
+                            <label class="text-[10px] tracking-[0.3em] text-[#8A8068] flex justify-between uppercase font-medium">
+                                <span>姓名 / Name</span><span class="text-[#8B0000] opacity-80 font-bold tracking-widest">*必填</span>
+                            </label>
+                            <div id="sk-name" class="skeleton skeleton-block rounded-xl"></div>
+                            <input type="text" name="name" id="reg-name" required autocomplete="name"
+                                class="w-full px-5 py-4 rounded-xl text-sm" placeholder="請輸入姓名" style="display:none">
+                            <p class="error-msg" id="err-reg-name">請輸入姓名</p>
+                        </div>
+                        <div class="space-y-3">
+                            <label class="text-[10px] tracking-[0.3em] text-[#8A8068] flex justify-between uppercase font-medium">
+                                <span>聯絡電話 / Phone</span><span class="text-[#8B0000] opacity-80 font-bold tracking-widest">*必填</span>
+                            </label>
+                            <div id="sk-phone" class="skeleton skeleton-block rounded-xl"></div>
+                            <input type="tel" name="phone" id="reg-phone" required autocomplete="tel" inputmode="numeric"
+                                class="w-full px-5 py-4 rounded-xl text-sm" placeholder="09xxxxxxxx" style="display:none">
+                            <p class="error-msg" id="err-reg-phone">請輸入有效的手機號碼（09 開頭，共 10 碼）</p>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="space-y-3">
+                        <label class="text-[10px] tracking-[0.3em] text-[#8A8068] flex justify-between uppercase font-medium">
+                            <span>電子郵件 / Email</span><span class="text-[#8B0000] opacity-80 font-bold tracking-widest">*必填</span>
+                        </label>
+                        <div id="sk-email" class="skeleton skeleton-block rounded-xl"></div>
+                        <input type="email" name="email" id="reg-email" required autocomplete="email"
+                            class="w-full px-5 py-4 rounded-xl text-sm" placeholder="將用於寄送確認信與通知" style="display:none">
+                        <p class="error-msg" id="err-reg-email">請輸入有效的 Email 格式</p>
+                    </div>
+
+                    <!-- 課程資訊 -->
+                    <div class="space-y-3">
+                        <label class="text-[10px] tracking-[0.3em] text-[#8A8068] uppercase font-medium">課程場次 / Course Info</label>
+                        <div id="sk-course" class="skeleton skeleton-block rounded-xl"></div>
+                        <div id="course-display" class="course-info-display text-[#D4B78F]" style="display:none">載入中...</div>
+                        <input type="hidden" name="course"       id="hidden-course">
+                        <input type="hidden" name="utm_source"   id="utm_source">
+                        <input type="hidden" name="utm_medium"   id="utm_medium">
+                        <input type="hidden" name="utm_campaign" id="utm_campaign">
+                    </div>
+
+                    <!-- 繳費同意 + 個資同意 -->
+                    <div class="pt-6 border-t border-[#2A251B]/50 space-y-5">
+                        <div id="sk-checkbox" class="skeleton rounded-xl" style="height:3.5rem"></div>
+
+                        <!-- 繳費同意 -->
+                        <label id="checkbox-wrap" class="flex items-start gap-5 cursor-pointer group" style="display:none">
+                            <div class="mt-1">
+                                <input type="checkbox" name="payment" id="reg-agreement" value="現金繳費" required class="ring-offset-black">
+                            </div>
+                            <div class="space-y-1">
+                                <span class="text-[11px] md:text-xs leading-relaxed text-[#A39171] group-hover:text-[#D4B78F] transition-colors duration-300 tracking-wider">
+                                    本人已閱讀並同意，本課程採 <span class="text-[#D4B78F]">課程當天現場現金繳費</span>，並同意依上述方式辦理相關費用事宜。
+                                </span>
+                                <div class="text-[9px] text-[#8B0000] opacity-80 font-bold uppercase tracking-[0.2em]">*必填 / Required</div>
+                            </div>
+                        </label>
+                        <p class="error-msg ml-10 mt-1" id="err-reg-agreement">請勾選同意後再送出</p>
+
+                        <!-- 個資同意（台灣個資法 + FB/IG/TikTok 廣告合規必要項目） -->
+                        <label id="privacy-wrap" class="flex items-start gap-5 cursor-pointer group" style="display:none">
+                            <div class="mt-1">
+                                <input type="checkbox" name="privacy_consent" id="reg-privacy" value="同意" required class="ring-offset-black">
+                            </div>
+                            <div class="space-y-1">
+                                <span class="text-[11px] md:text-xs leading-relaxed text-[#A39171] group-hover:text-[#D4B78F] transition-colors duration-300 tracking-wider">
+                                    本人同意御景家依
+                                    <button type="button" onclick="document.getElementById('privacy-modal').style.display='flex'"
+                                       class="text-[#D4B78F] underline underline-offset-2 cursor-pointer bg-transparent border-none p-0 text-[11px] md:text-xs font-inherit">
+                                       隱私政策
+                                    </button>
+                                    收集並使用本人之姓名、電話、Email，僅供課程報名聯繫用途，不對外提供予第三方。
+                                </span>
+                                <div class="text-[9px] text-[#8B0000] opacity-80 font-bold uppercase tracking-[0.2em]">*必填 / Required</div>
+                            </div>
+                        </label>
+                        <p class="error-msg ml-10" id="err-reg-privacy">請勾選同意個人資料收集後再送出</p>
+                    </div>
+                </section>
+
+                <!-- 提交區 -->
+                <div id="form-submit-zone">
+                    <div id="sk-btn" class="skeleton rounded-2xl" style="height:4rem"></div>
+                    <button type="submit" id="submitBtn"
+                        class="w-full btn-gold py-6 rounded-2xl text-sm font-bold tracking-[0.5em] uppercase shadow-2xl"
+                        style="display:none; min-height:3.75rem;" disabled>
+                        確認提交報名
+                    </button>
+                    <div id="urgency-bar">
+                        <div class="urgency-text">🔥 報名熱烈，目前正取即將額滿，送出將進入候補排隊</div>
+                    </div>
+                    <!-- 隱私政策聲明（廣告落地頁合規必要） -->
+                    <p class="text-center text-[9px] text-[#3A3225] mt-4 tracking-widest leading-relaxed">
+                        提交即表示您同意我們的
+                        <button type="button" onclick="document.getElementById('privacy-modal').style.display='flex'"
+                           class="underline underline-offset-2 hover:text-[#D4B78F] transition-colors duration-300 bg-transparent border-none text-[#3A3225] text-[9px] cursor-pointer p-0">
+                           隱私政策
+                        </button>
+                        ，您的資料僅用於課程報名聯繫用途。
+                    </p>
+                    <p class="text-center text-[9px] text-[#3A3225] mt-3 tracking-widest">© YUJINGJIA ART STUDIO EST. 2024</p>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- ═══ 隱私政策彈窗（內建，不需外部連結）═══ -->
+    <div id="privacy-modal" class="fixed inset-0 z-[110]" style="display:none;align-items:center;justify-content:center;padding:1.5rem">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-xl" onclick="document.getElementById('privacy-modal').style.display='none'"></div>
+        <div class="bg-[#0D0C0B] border border-[#D4B78F]/30 rounded-[2rem] p-8 md:p-12 max-w-lg w-full relative shadow-[0_0_100px_rgba(0,0,0,1)] animate-fadeInUp modal-scroll">
+            <button onclick="document.getElementById('privacy-modal').style.display='none'" aria-label="關閉"
+                class="absolute top-5 right-6 text-[#5C5547] hover:text-[#D4B78F] transition-colors duration-300 text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="text-xl font-serif text-[#D4B78F] mb-6 tracking-[0.2em]">隱私政策</h3>
+            <div class="text-[#A39171] text-xs font-light leading-loose space-y-5">
+                <p class="text-[#E8DCC4] font-medium text-sm">御景家（YUJINGJIA ART STUDIO）個人資料保護聲明</p>
+                <div>
+                    <p class="text-[#D4B78F] text-[10px] tracking-widest uppercase mb-2">一、收集目的</p>
+                    <p>本工作室依台灣個人資料保護法，僅於課程報名流程中收集您的個人資料，用於確認報名資格、寄送課程相關通知及聯繫事宜。</p>
+                </div>
+                <div>
+                    <p class="text-[#D4B78F] text-[10px] tracking-widest uppercase mb-2">二、收集項目</p>
+                    <p>姓名、聯絡電話、電子郵件信箱。</p>
+                </div>
+                <div>
+                    <p class="text-[#D4B78F] text-[10px] tracking-widest uppercase mb-2">三、利用方式</p>
+                    <p>您的個人資料僅供御景家內部使用，用於課程報名確認、行程通知、名額異動通知。不會出售、出租或以任何形式提供予第三方。</p>
+                </div>
+                <div>
+                    <p class="text-[#D4B78F] text-[10px] tracking-widest uppercase mb-2">四、保存期限</p>
+                    <p>資料保存至課程結束後六個月，逾期將予以刪除。</p>
+                </div>
+                <div>
+                    <p class="text-[#D4B78F] text-[10px] tracking-widest uppercase mb-2">五、您的權利</p>
+                    <p>您得依個資法第三條規定，向本工作室請求查詢、閱覽、補充、更正或刪除您的個人資料。如需行使上述權利，請透過官方 LINE 群組與我們聯繫。</p>
+                </div>
+                <div>
+                    <p class="text-[#D4B78F] text-[10px] tracking-widest uppercase mb-2">六、廣告追蹤說明</p>
+                    <p>本頁面使用 Facebook Pixel 及 TikTok Pixel 進行廣告投放成效追蹤，追蹤資料由各平台依其隱私政策處理，不包含您填寫的報名個資。</p>
+                </div>
+            </div>
+            <button onclick="document.getElementById('privacy-modal').style.display='none'"
+                class="mt-8 w-full py-4 btn-gold rounded-xl tracking-[0.3em] text-xs font-bold uppercase">
+                我已了解
+            </button>
+        </div>
+    </div>
+
+    <!-- ═══ 額滿彈窗（重新設計：溫馨高轉換率文案）═══ -->
+    <div id="full-modal" class="fixed inset-0 z-[100]" style="display:none;align-items:center;justify-content:center;padding:1.5rem">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-xl"></div>
+        <div class="bg-[#0D0C0B] border border-[#D4B78F]/30 rounded-[2rem] p-10 md:p-14 max-w-lg w-full relative shadow-[0_0_100px_rgba(0,0,0,1)] animate-fadeInUp modal-glow modal-scroll">
+            <button onclick="closeFullModal()" aria-label="關閉"
+                class="absolute top-5 right-6 text-[#5C5547] hover:text-[#D4B78F] transition-colors duration-300 text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 bg-gradient-to-br from-[#D4B78F] to-[#A38A6A] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                    <i class="fa-solid fa-heart text-[#12110F] text-2xl"></i>
+                </div>
+                <h3 id="full-modal-title" class="text-2xl md:text-3xl font-serif text-[#D4B78F] mb-3 tracking-[0.2em]">感謝您的熱情 🌸</h3>
+                <p class="text-[#5C5547] text-xs tracking-widest">本場次名額已全數額滿</p>
+            </div>
+            <div id="full-modal-body" class="text-[#A39171] text-sm font-light leading-loose text-left space-y-4 mb-8">
+                <p class="text-[#E8DCC4] border-b border-[#2A251B] pb-4">
+                    每一份報名都代表著一份對花藝的熱忱，我們非常感謝您的關注與支持。🙏
+                </p>
+                <p>雖然本場次已額滿，但好消息是——</p>
+                <ul class="space-y-3">
+                    <li class="flex items-start gap-3">
+                        <span class="text-[#D4B78F] mt-0.5">✦</span>
+                        <span>留下您的資料，<strong class="text-[#E8DCC4]">有名額釋出時我們會第一時間通知您遞補</strong></span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="text-[#D4B78F] mt-0.5">✦</span>
+                        <span><strong class="text-[#E8DCC4]">下次開課優先通知您</strong>，讓您不再錯過心儀的場次</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="text-[#D4B78F] mt-0.5">✦</span>
+                        <span>加入 LINE 群組，隨時掌握最新課程動態與花藝分享</span>
+                    </li>
+                </ul>
+                <p class="text-[#5C5547] text-xs pt-2">您的等待是我們持續創作的動力，期待與您在花香中相遇 🌺</p>
+            </div>
+            <form id="waitlistForm" novalidate class="space-y-5">
+                <div class="space-y-3">
+                    <label class="text-[10px] tracking-[0.3em] text-[#8A8068] uppercase font-medium">姓名 / Name <span class="text-[#8B0000]">*</span></label>
+                    <input type="text" name="name" id="wl-name" required autocomplete="name" class="w-full px-5 py-4 rounded-xl text-sm" placeholder="請輸入姓名">
+                    <p class="error-msg" id="err-wl-name">請輸入姓名</p>
+                </div>
+                <div class="space-y-3">
+                    <label class="text-[10px] tracking-[0.3em] text-[#8A8068] uppercase font-medium">聯絡電話 / Phone <span class="text-[#8B0000]">*</span></label>
+                    <input type="tel" name="phone" id="wl-phone" required autocomplete="tel" inputmode="numeric" class="w-full px-5 py-4 rounded-xl text-sm" placeholder="09xxxxxxxx">
+                    <p class="error-msg" id="err-wl-phone">請輸入有效的手機號碼（09 開頭，共 10 碼）</p>
+                </div>
+                <div class="space-y-3">
+                    <label class="text-[10px] tracking-[0.3em] text-[#8A8068] uppercase font-medium">電子郵件 / Email <span class="text-[#8B0000]">*</span></label>
+                    <input type="email" name="email" id="wl-email" required autocomplete="email" class="w-full px-5 py-4 rounded-xl text-sm" placeholder="接收通知使用">
+                    <p class="error-msg" id="err-wl-email">請輸入有效的 Email 格式</p>
+                </div>
+                <input type="hidden" name="type" value="候補名單">
+                <!-- 候補表單 Honeypot -->
+                <div aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;" tabindex="-1">
+                    <input type="text" name="_hp" id="_hp_wl" autocomplete="off" tabindex="-1" placeholder="leave empty">
+                </div>
+                <button type="submit" id="waitlistBtn" class="w-full btn-gold py-5 rounded-2xl text-sm font-bold tracking-[0.4em] uppercase shadow-2xl mt-2">
+                    🌸 保留候補資格・優先通知我
+                </button>
+                <p class="text-center text-[9px] text-[#3A3225] tracking-wider">留下資料後系統將自動寄送確認信至您的信箱</p>
+            </form>
+            <!-- LINE 群組連結（備用）-->
+            <div class="mt-6 pt-5 border-t border-[#2A251B]/50 text-center">
+                <p class="text-[#5C5547] text-[10px] tracking-wider mb-3">或加入官方 LINE 群組直接掌握最新消息</p>
+                <a href="https://line.me/ti/g/NPayXcjfUr" target="_blank" rel="noopener noreferrer"
+                   class="inline-flex items-center gap-2 text-[#D4B78F] text-xs hover:opacity-80 transition-opacity">
+                    <i class="fa-brands fa-line text-base"></i> 加入御景家 LINE 群組
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ 成功 / 候補彈窗 ═══ -->
+    <div id="success-modal" class="fixed inset-0 z-[100]" style="display:none;align-items:center;justify-content:center;padding:1.5rem">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-xl"></div>
+        <div class="bg-[#0D0C0B] border border-[#D4B78F]/30 rounded-[2rem] p-10 md:p-14 max-w-lg w-full relative text-center shadow-[0_0_100px_rgba(0,0,0,1)] animate-fadeInUp modal-glow">
+            <div class="w-20 h-20 bg-gradient-to-br from-[#D4B78F] to-[#A38A6A] rounded-full flex items-center justify-center mx-auto mb-10 shadow-lg">
+                <i id="modalIcon" class="fa-solid fa-check text-[#12110F] text-2xl"></i>
+            </div>
+            <h3 id="modalTitle" class="text-2xl md:text-3xl font-serif text-[#D4B78F] mb-6 tracking-[0.2em]">報名已受理</h3>
+            <div id="modalDesc" class="text-[#A39171] text-sm font-light leading-loose mb-12 text-left space-y-4"></div>
+            <button onclick="location.reload()" class="w-full py-5 btn-gold rounded-xl tracking-[0.4em] text-xs font-bold uppercase">確認</button>
+        </div>
+    </div>
+
+    <script>
+    (() => {
+        'use strict';
+
+        // ════════════════════════════════════════════
+        // ⚙️ 設定區 — 只需修改這裡
+        // ════════════════════════════════════════════
+        const CONFIG = {
+            scriptURL: 'https://script.google.com/macros/s/AKfycbx0ZtWwShCgCMZYiEP3DCspfq-KXgx8l0fR9nC2xXbLzgVFCY0YuqFCN-VDowr-rYpt/exec',
+            actions: { CHECK_FULL:'checkFull', REGISTER:'register', WAITLIST:'waitlist' },
+            URGENCY_THRESHOLD: 3,   // 剩餘 ≤ N 席顯示緊迫警示
+            FUSE_THRESHOLD:   10,   // 正取達此人數完全關閉（等於 FUSE_SEATS）
+            POLL_INTERVAL:  15000   // 背景輪詢間隔 ms
+        };
+
+        // ── UTM 解析 + og:url 自動填入 ──
+        function parseUTM() {
+            const p = new URLSearchParams(window.location.search);
+            document.getElementById('utm_source').value   = p.get('utm_source')   || '';
+            document.getElementById('utm_medium').value   = p.get('utm_medium')   || '';
+            document.getElementById('utm_campaign').value = p.get('utm_campaign') || '';
+            // og:url 自動填入當前網址（FB 廣告爬取時讀取）
+            const ogUrl = document.querySelector('meta[property="og:url"]');
+            if (ogUrl) ogUrl.setAttribute('content', window.location.href.split('?')[0]);
+        }
+
+        // ── UI 顯示：骨架屏 → 真實內容 ──
+        function revealUI() {
+            ['sk-name','sk-phone','sk-email','sk-course','sk-checkbox','sk-btn',
+             'sk-info-1','sk-info-2','sk-info-3'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = 'none';
+            });
+            ['reg-name','reg-phone','reg-email','course-display',
+             'checkbox-wrap','privacy-wrap','info-card-1','info-card-2','info-card-3',
+             'seats-status-wrap'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = '';
+            });
+            const btn = document.getElementById('submitBtn');
+            if (btn) { btn.style.display = ''; btn.disabled = false; }
+        }
+
+        // ── 表單驗證 ──
+        const Validator = {
+            isEmail:  v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
+            isPhone:  v => /^09\d{8}$/.test(v.trim().replace(/[-\s]/g, '')),
+            notEmpty: v => v.trim().length > 0,
+            showError(f,e){ document.getElementById(f)?.classList.add('field-error'); document.getElementById(e)?.classList.add('visible'); },
+            clearError(f,e){ document.getElementById(f)?.classList.remove('field-error'); document.getElementById(e)?.classList.remove('visible'); },
+            validateRegForm() {
+                let ok = true;
+                const name    = document.getElementById('reg-name').value;
+                const phone   = document.getElementById('reg-phone').value;
+                const email   = document.getElementById('reg-email').value;
+                const agree   = document.getElementById('reg-agreement').checked;
+                const privacy = document.getElementById('reg-privacy').checked;
+                if (!this.notEmpty(name))  { this.showError('reg-name','err-reg-name');       ok=false; } else this.clearError('reg-name','err-reg-name');
+                if (!this.isPhone(phone))  { this.showError('reg-phone','err-reg-phone');     ok=false; } else this.clearError('reg-phone','err-reg-phone');
+                if (!this.isEmail(email))  { this.showError('reg-email','err-reg-email');     ok=false; } else this.clearError('reg-email','err-reg-email');
+                if (!agree)                { this.showError('reg-agreement','err-reg-agreement'); ok=false; } else this.clearError('reg-agreement','err-reg-agreement');
+                if (!privacy)              { this.showError('reg-privacy','err-reg-privacy'); ok=false; } else this.clearError('reg-privacy','err-reg-privacy');
+                return ok;
+            },
+            validateWaitlistForm() {
+                let ok = true;
+                const name  = document.getElementById('wl-name').value;
+                const phone = document.getElementById('wl-phone').value;
+                const email = document.getElementById('wl-email').value;
+                if (!this.notEmpty(name))  { this.showError('wl-name','err-wl-name');   ok=false; } else this.clearError('wl-name','err-wl-name');
+                if (!this.isPhone(phone))  { this.showError('wl-phone','err-wl-phone'); ok=false; } else this.clearError('wl-phone','err-wl-phone');
+                if (!this.isEmail(email))  { this.showError('wl-email','err-wl-email'); ok=false; } else this.clearError('wl-email','err-wl-email');
+                return ok;
+            }
+        };
+
+        // ── UI 工具 ──
+        const UI = {
+            showModal(id){ document.getElementById(id).style.display='flex'; },
+            hideModal(id){ document.getElementById(id).style.display='none'; },
+            setBtnLoading(btn,loading,txt){ btn.disabled=loading; btn.innerHTML=loading?`<span class="btn-spinner"></span>處理中...`:txt; },
+            showResult({title,desc,icon}){
+                document.getElementById('modalTitle').innerText=title;
+                document.getElementById('modalDesc').innerHTML=desc;
+                document.getElementById('modalIcon').className=icon;
+                this.showModal('success-modal');
+            }
+        };
+
+        // ── API ──
+        const Api = {
+            async checkFull(){
+                const res = await fetch(`${CONFIG.scriptURL}?action=${CONFIG.actions.CHECK_FULL}`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                if (data.result === 'error') throw new Error('GAS: ' + data.message);
+                return data;
+            },
+            async post(fd){
+                const res = await fetch(CONFIG.scriptURL, {method:'POST', body:fd});
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return res.json();
+            }
+        };
+
+        // ── 廣告像素事件 ──
+        function fireLeadEvent(status){
+            try{
+                if(typeof fbq==='function') fbq('track','Lead',{content_name:status});
+                if(typeof ttq!=='undefined'&&typeof ttq.track==='function') ttq.track('SubmitForm',{content_name:status});
+            }catch(e){ console.warn('[Pixel]',e); }
+        }
+
+        // ── 名額狀態條 ──
+        let cachedMaxSeats = 10;
+        function updateSeatsUI(remaining, maxSeats){
+            cachedMaxSeats = maxSeats || cachedMaxSeats;
+            const used = cachedMaxSeats - remaining;
+            const pct  = Math.min(100, Math.round((used/cachedMaxSeats)*100));
+            const bar  = document.getElementById('seats-bar-fill');
+            const lbl  = document.getElementById('seats-label');
+            if(bar) bar.style.width = pct+'%';
+            if(lbl) lbl.textContent = remaining > 0 ? `剩餘 ${remaining} 席` : '已額滿';
+            const urgencyBar = document.getElementById('urgency-bar');
+            if(remaining<=0){ urgencyBar.classList.remove('show'); }
+            else if(remaining<=CONFIG.URGENCY_THRESHOLD){ urgencyBar.classList.add('show'); }
+            else { urgencyBar.classList.remove('show'); }
+        }
+
+        // ── 場次切換自動解鎖 session（換日期後新場次可繼續報名）──
+        function checkAndRefreshSessionForNewCourse(courseDate) {
+            const stored = sessionStorage.getItem('reg_course_date');
+            if (stored && stored !== courseDate) {
+                sessionStorage.removeItem('reg_submitted');
+                console.log('[Session] 場次已更換，提交鎖已清除');
+            }
+            sessionStorage.setItem('reg_course_date', courseDate);
+        }
+
+        // ── 套用狀態（正常/額滿/熔斷）──
+        function applyState(data, isPolling=false){
+            const remaining = data.remaining ?? 0;
+            const maxSeats  = Number(data.maxSeats || cachedMaxSeats);
+            updateSeatsUI(remaining, maxSeats);
+            if (data.courseDate) checkAndRefreshSessionForNewCourse(data.courseDate);
+
+            // 熔斷（達到 FUSE_SEATS）
+            if(data.isFull && maxSeats >= CONFIG.FUSE_THRESHOLD && remaining === 0){
+                document.getElementById('closed-overlay').classList.add('show');
+                const btn = document.getElementById('submitBtn');
+                if(btn) btn.disabled = true;
+                return;
+            }
+            // 額滿（達到 MAX_SEATS，可登記候補）
+            if(data.isFull){
+                if(!isPolling){
+                    UI.showModal('full-modal');
+                } else {
+                    const btn = document.getElementById('submitBtn');
+                    if(btn){ btn.textContent='🌸 登記候補・優先通知'; btn.onclick=(e)=>{e.preventDefault();UI.showModal('full-modal');}; }
+                    if(document.getElementById('full-modal').style.display!=='flex'){
+                        document.getElementById('full-modal-title').textContent='名額已在您填寫時搶完了 🌸';
+                        document.getElementById('full-modal-body').innerHTML=`
+                            <p class="text-[#E8DCC4] border-b border-[#2A251B] pb-4">
+                                感謝您的熱情！就在您填寫的這段時間，最後的名額也被預訂走了。<br>
+                                這說明大家和您一樣，對這堂課充滿期待 🌺
+                            </p>
+                            <p>留下您的資料，讓我們為您保留優先遞補資格：</p>
+                            <ul class="space-y-3">
+                                <li class="flex items-start gap-3"><span class="text-[#D4B78F] mt-0.5">✦</span><span>有名額釋出時，<strong class="text-[#E8DCC4]">第一時間通知您遞補</strong></span></li>
+                                <li class="flex items-start gap-3"><span class="text-[#D4B78F] mt-0.5">✦</span><span>下次開課，<strong class="text-[#E8DCC4]">優先寄送報名通知</strong>給您</span></li>
+                            </ul>`;
+                        UI.showModal('full-modal');
+                    }
+                }
+                return;
+            }
+            // 正常開放
+            const btn = document.getElementById('submitBtn');
+            if(btn){ btn.textContent='確認提交報名'; btn.onclick=null; }
+        }
+
+        // ── 背景輪詢 ──
+        let isFirstLoad = true;
+        async function pollStatus(){
+            try{ const data=await Api.checkFull(); if(!isFirstLoad) applyState(data,true); }
+            catch(e){ console.warn('[poll]',e.message); }
+        }
+        function startPolling(){ setInterval(pollStatus, CONFIG.POLL_INTERVAL); }
+
+        // 聚焦輸入框時觸發一次狀態更新
+        ['reg-name','reg-phone','reg-email'].forEach(id=>{
+            document.getElementById(id)?.addEventListener('focus', ()=>{ if(!isFirstLoad) pollStatus(); });
         });
-      }
 
-      var count     = getRegCount(config.COURSE_DATE);
-      var remaining = Math.max(0, maxSeats - count);
+        // ── 初始化（含自動 retry，修復「課程資訊載入中」問題）──
+        window.addEventListener('DOMContentLoaded', async () => {
+            parseUTM();
 
-      return jsonResponse({
-        isFull:      count >= maxSeats,
-        courseName:  config.COURSE_NAME  || '課程名稱',
-        courseDate:  config.COURSE_DATE  || '日期待定',
-        coursePrice: config.COURSE_PRICE || '費用待定',
-        maxSeats:    maxSeats,
-        fuseSeats:   fuseSeats,
-        remaining:   remaining
-      });
-    }
+            async function initWithRetry(maxRetry=3, delay=2000) {
+                for (let attempt=1; attempt<=maxRetry; attempt++) {
+                    try {
+                        const data = await Api.checkFull();
+                        const courseText = `${data.courseName}｜${data.courseDate}｜${data.coursePrice}`;
+                        const display = document.getElementById('course-display');
+                        const hidden  = document.getElementById('hidden-course');
+                        if (display) display.textContent = courseText;
+                        if (hidden)  hidden.value = courseText;
+                        const heroTitle = document.getElementById('hero-title');
+                        if (heroTitle && data.courseName) heroTitle.textContent = data.courseName;
+                        revealUI(); isFirstLoad = false;
+                        applyState(data, false);
+                        startPolling();
+                        return;
+                    } catch(err) {
+                        console.warn(`[init] attempt ${attempt}/${maxRetry}:`, err.message);
+                        if (attempt < maxRetry) {
+                            await new Promise(r => setTimeout(r, delay));
+                        } else {
+                            // 三次均失敗
+                            revealUI(); isFirstLoad = false;
+                            const display = document.getElementById('course-display');
+                            if (display) {
+                                display.textContent = '課程資訊暫時無法載入，請重新整理頁面';
+                                display.style.color = '#c0392b';
+                            }
+                            // 在 DevTools Console 顯示詳細原因（開發時用）
+                            console.error('[init] 三次重試均失敗。最可能原因：GAS 程式碼修改後尚未重新部署。\n解法：GAS 編輯器 → 部署 → 管理部署作業 → 編輯（鉛筆） → 版本選「建立新版本」→ 部署');
+                        }
+                    }
+                }
+            }
 
-    return jsonResponse({ result: 'error', message: 'unknown_action' });
+            initWithRetry();
+        });
 
-  } catch(err) {
-    Logger.log('doGet error: ' + err.toString());
-    return jsonResponse({ result: 'error', message: 'server_error' });
-  }
-}
+        window.closeFullModal = () => UI.hideModal('full-modal');
 
+        // ── 候補送出 ──
+        const waitlistForm = document.getElementById('waitlistForm');
+        const waitlistBtn  = document.getElementById('waitlistBtn');
+        let waitlistSubmitting = false;
+        waitlistForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (waitlistSubmitting) return;
+            if (!Validator.validateWaitlistForm()) return;
+            waitlistSubmitting = true;
+            UI.setBtnLoading(waitlistBtn, true, '🌸 保留候補資格・優先通知我');
+            const fd = new FormData(waitlistForm);
+            fd.append('action', CONFIG.actions.WAITLIST);
+            try {
+                const res = await Api.post(fd);
+                if (res.result === 'duplicate') {
+                    alert('您的電話或 Email 已登記過本場次候補，無需重複登記。');
+                    UI.setBtnLoading(waitlistBtn, false, '🌸 保留候補資格・優先通知我');
+                    return;
+                }
+                fireLeadEvent('候補');
+                UI.hideModal('full-modal');
+                UI.showResult({
+                    title: '已列入候補名單 🌸',
+                    desc: '<p class="text-center">您的候補資格已登記成功！<br>確認信已寄至您的信箱。<br><br>一旦有名額釋出，我們將第一時間通知您。<br>感謝您的耐心等候，期待與您相聚 🌺</p>',
+                    icon: 'fa-solid fa-envelope-open-text text-[#12110F] text-2xl'
+                });
+                waitlistForm.reset();
+            } catch(err) {
+                console.error('[waitlist]', err.message);
+                alert('送出失敗，請檢查網路或聯繫官方 LINE。');
+                UI.setBtnLoading(waitlistBtn, false, '🌸 保留候補資格・優先通知我');
+            } finally { waitlistSubmitting = false; }
+        });
 
-// ─── POST：提交報名 / 候補 ────────────────────────────────────
-function doPost(e) {
-  try {
-    var config    = getConfig();
-    var params    = e.parameter;
-    var action    = params.action;
-    var maxSeats  = Number(config.MAX_SEATS  || 5);
-    var fuseSeats = Number(config.FUSE_SEATS || 10);
+        // ── 正式報名送出 ──
+        const bookingForm = document.getElementById('bookingForm');
+        const submitBtn   = document.getElementById('submitBtn');
+        let regSubmitting = false;
+        bookingForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (regSubmitting) return;
+            // Session 提交鎖（防重複快速點擊）
+            if (sessionStorage.getItem('reg_submitted') === '1') {
+                alert('您已送出過報名，請勿重複提交。\n如有疑問請聯繫官方 LINE。');
+                return;
+            }
+            if (!Validator.validateRegForm()) return;
+            regSubmitting = true;
+            UI.setBtnLoading(submitBtn, true, '確認提交報名');
+            const fd = new FormData(bookingForm);
+            fd.append('action', CONFIG.actions.REGISTER);
+            try {
+                const data = await Api.post(fd);
+                if (data.result === 'duplicate') {
+                    alert('您的電話或 Email 已報名過本場次，請勿重複報名。\n如有疑問請聯繫官方 LINE。');
+                    UI.setBtnLoading(submitBtn, false, '確認提交報名');
+                    return;
+                }
+                if (data.result === 'closed') {
+                    document.getElementById('closed-overlay').classList.add('show');
+                    UI.setBtnLoading(submitBtn, false, '確認提交報名');
+                    return;
+                }
+                if (data.result === 'error') {
+                    alert((data.message || '送出失敗') + '\n如有疑問請聯繫官方 LINE。');
+                    UI.setBtnLoading(submitBtn, false, '確認提交報名');
+                    return;
+                }
+                // 成功
+                sessionStorage.setItem('reg_submitted', '1');
+                if (data.status === '🔸備取') {
+                    fireLeadEvent('候補');
+                    UI.showResult({
+                        title: '候補登記成功 🌸',
+                        desc: '<p class="text-center">您已列入候補名單！<br>候補確認信已寄至您的信箱。<br><br>一旦有名額釋出將依序優先通知您，<br>感謝您的耐心，期待與您在花香中相聚 🌺</p>',
+                        icon: 'fa-solid fa-envelope-open-text text-[#12110F] text-2xl'
+                    });
+                } else {
+                    fireLeadEvent('正取');
+                    UI.showResult({
+                        title: '報名正式成功 🎉',
+                        desc: '<p class="text-center">恭喜您！席次已為您保留。<br>確認信已寄至您的信箱，請查收。<br><br>請於課程當天攜帶現金至現場繳費，<br>我們非常期待與您相見 🌸</p>',
+                        icon: 'fa-solid fa-check text-[#12110F] text-2xl'
+                    });
+                }
+            } catch(err) {
+                console.error('[register]', err.message);
+                alert('提交失敗，請檢查網路或聯繫官方 LINE。');
+                UI.setBtnLoading(submitBtn, false, '確認提交報名');
+            } finally { regSubmitting = false; }
+        });
 
-    // Honeypot
-    if (params._hp && String(params._hp).trim() !== '') {
-      return jsonResponse({ result: 'error', message: 'invalid_request' });
-    }
-
-    // 後端格式驗證
-    if (!isValidName(params.name))   return jsonResponse({ result: 'error', message: '姓名格式錯誤' });
-    if (!isValidPhone(params.phone)) return jsonResponse({ result: 'error', message: '電話格式錯誤' });
-    if (!isValidEmail(params.email)) return jsonResponse({ result: 'error', message: 'Email 格式錯誤' });
-
-    // Sanitize
-    var safeName  = sanitize(params.name);
-    var safePhone = sanitize(params.phone).replace(/[-\s]/g, '');
-    var safeEmail = sanitize(params.email).toLowerCase();
-
-    // Rate Limit
-    if (isRateLimited(safeEmail)) {
-      return jsonResponse({ result: 'error', message: '送出太頻繁，請稍候再試' });
-    }
-
-    // 併發鎖（防超賣）
-    var lock = LockService.getScriptLock();
-    try { lock.waitLock(10000); }
-    catch(le) { return jsonResponse({ result: 'error', message: '系統忙碌，請稍後再試' }); }
-
-    try {
-      var count    = getRegCount(config.COURSE_DATE);
-      var isFull   = count >= maxSeats;
-      var isClosed = count >= fuseSeats;
-
-      if (isClosed) return jsonResponse({ result: 'closed', message: '報名已截止' });
-
-      if (isDuplicate(config.COURSE_DATE, safePhone, safeEmail)) {
-        return jsonResponse({ result: 'duplicate', message: '此電話或 Email 已報名本場次' });
-      }
-
-      var status  = (action === 'waitlist') ? '🔸備取' : (isFull ? '🔸備取' : '✅正取');
-      var payment = (status === '✅正取') ? (params.payment || '現金繳費') : '-';
-
-      var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('報名資料');
-      sheet.appendRow([
-        new Date(), config.COURSE_DATE, config.COURSE_NAME,
-        safeName, safePhone, safeEmail, status, payment,
-        sanitize(params.utm_source || ''),
-        sanitize(params.utm_medium || ''),
-        sanitize(params.utm_campaign || '')
-      ]);
-
-      var newRow = sheet.getLastRow();
-      sheet.getRange(newRow, 7).setDataValidation(
-        SpreadsheetApp.newDataValidation()
-          .requireValueInList(['✅正取', '🔸備取', '❌取消'], true)
-          .setAllowInvalid(false).setHelpText('請從清單選擇狀態').build()
-      );
-
-      var newCount  = (status === '✅正取') ? count + 1 : count;
-      var newIsFull = newCount >= maxSeats;
-
-      // 熔斷通知管理員
-      if (newCount >= fuseSeats && config.ADMIN_EMAIL) {
-        try {
-          MailApp.sendEmail({
-            to:      config.ADMIN_EMAIL,
-            subject: '【御景家】⚠️ 報名額滿通知：' + config.COURSE_DATE,
-            body:    config.COURSE_DATE + ' 報名已達熔斷上限（' + fuseSeats + ' 人）。\n表單已自動關閉，請前往後台確認，並視需求開啟下一場次。\n\n御景家報名系統'
-          });
-        } catch(me) { Logger.log('熔斷通知失敗：' + me.toString()); }
-      }
-
-      // 寄確認信
-      try {
-        sendConfirmationEmail(safeEmail, safeName, status, config.COURSE_NAME, config.COURSE_DATE, config.COURSE_PRICE);
-      } catch(me) { Logger.log('確認信失敗：' + me.toString()); }
-
-      return jsonResponse({
-        result:    'success',
-        status:    status,
-        isFull:    newIsFull,
-        remaining: Math.max(0, maxSeats - newCount)
-      });
-
-    } finally { lock.releaseLock(); }
-
-  } catch(err) {
-    Logger.log('doPost error: ' + err.toString());
-    return jsonResponse({ result: 'error', message: 'server_error' });
-  }
-}
-
-
-// ─── onStatusEdit：G欄狀態變更觸發器 ────────────────────────
-// 保留：備取 → 正取（手動）→ 自動寄錄取通知信
-// 移除：取消 → 自動遞補（停用，遞補請手動改備取學員的 G 欄為「✅正取」）
-function onStatusEdit(e) {
-  var range = e.range;
-  var sheet = range.getSheet();
-  if (sheet.getName() !== '報名資料') return;
-  if (range.getColumn() !== 7) return;
-
-  var newValue = range.getValue();
-  var oldValue = e.oldValue;
-
-  if (newValue === '✅正取' && oldValue !== '✅正取') {
-    var row     = range.getRow();
-    var rowData = sheet.getRange(row, 1, 1, 11).getValues()[0];
-    var config  = getConfig();
-
-    if (rowData[7] === '-' || rowData[7] === '') {
-      sheet.getRange(row, 8).setValue('現金繳費');
-    }
-    try {
-      sendConfirmationEmail(rowData[5], rowData[3], '✅正取', rowData[2], rowData[1], config.COURSE_PRICE);
-      Logger.log('錄取信寄出：' + rowData[5]);
-    } catch(err) { Logger.log('錄取信失敗：' + err.toString()); }
-  }
-}
-
-
-// ─── onConfigEdit：config 分頁變更觸發器 ─────────────────────
-// 修改 COURSE_DATE → 自動重置 FORM_OPEN + 場次總覽 + 通知信
-function onConfigEdit(e) {
-  var range = e.range;
-  var sheet = range.getSheet();
-  if (sheet.getName() !== 'config') return;
-  if (range.getColumn() !== 2) return;
-
-  var keyCell  = sheet.getRange(range.getRow(), 1).getValue();
-  var newValue = range.getValue();
-
-  if (String(keyCell).trim() !== 'COURSE_DATE') return;
-  if (!newValue || String(newValue).trim() === '') return;
-
-  var newDate    = String(newValue).trim();
-  var config     = getConfig();
-  var configData = sheet.getDataRange().getValues();
-
-  // 1. 重置 FORM_OPEN = TRUE
-  for (var i = 0; i < configData.length; i++) {
-    if (String(configData[i][0]).trim() === 'FORM_OPEN') {
-      sheet.getRange(i + 1, 2).setValue('TRUE');
-      break;
-    }
-  }
-
-  // 2. 場次總覽新增
-  try {
-    var ss       = SpreadsheetApp.getActiveSpreadsheet();
-    var overview = ss.getSheetByName('場次總覽') || setupOverviewSheet();
-    var exists   = overview.getDataRange().getValues().slice(1)
-                   .some(function(r){ return String(r[0]).trim() === newDate; });
-    if (!exists) {
-      overview.appendRow([newDate, config.COURSE_NAME || '', '', '', config.MAX_SEATS || 5, '']);
-      var lr = overview.getLastRow();
-      overview.getRange(lr, 3).setFormula('=COUNTIFS(報名資料!B:B,"' + newDate + '",報名資料!G:G,"✅正取")');
-      overview.getRange(lr, 4).setFormula('=COUNTIFS(報名資料!B:B,"' + newDate + '",報名資料!G:G,"🔸備取")');
-      overview.getRange(lr, 6).setFormula('=IF(C' + lr + '>=E' + lr + ',"額滿","開放中")');
-    }
-  } catch(err) { Logger.log('場次總覽失敗：' + err.toString()); }
-
-  // 3. 通知管理員
-  if (config.ADMIN_EMAIL) {
-    try {
-      MailApp.sendEmail({
-        to:      config.ADMIN_EMAIL,
-        subject: '【御景家】🆕 新場次已啟動：' + newDate,
-        body:    '場次：' + newDate + '\n課程：' + (config.COURSE_NAME  || '請確認') +
-                 '\n費用：' + (config.COURSE_PRICE || '請確認') +
-                 '\n名額：' + (config.MAX_SEATS    || '請確認') +
-                 '\n\nFORM_OPEN 已自動重置為 TRUE。\n請確認所有設定正確後再分享連結。\n\n御景家報名系統'
-      });
-    } catch(me) { Logger.log('通知信失敗：' + me.toString()); }
-  }
-}
-
-
-// ─── 寄送確認信函 ────────────────────────────────────────────
-function sendConfirmationEmail(userEmail, userName, status, courseName, courseDate, coursePrice) {
-  var subject, body;
-
-  if (status === '🔸備取') {
-    subject = '【候補通知】御景家＿' + courseName;
-    body =
-      '親愛的 ' + userName + ' 您好：\n\n' +
-      '感謝您對「' + courseName + '」的熱情支持！\n\n' +
-      '很遺憾地告知您，' + courseDate + ' 場次的正取名額已全數額滿。\n\n' +
-      '━━━━━━━━━━━━━━━━━━━━\n' +
-      '🌸 您已成功列入【候補名單】\n' +
-      '━━━━━━━━━━━━━━━━━━━━\n\n' +
-      '一旦有學員釋出名額，我們將依報名順序主動與您聯繫遞補。\n' +
-      '您的熱情我們都看見了，期待有機會在花藝課堂中與您相聚 🌺\n\n' +
-      '下次開課資訊也將第一時間寄送給您，請靜候佳音。\n' +
-      '如有疑問，歡迎加入我們的官方 LINE 群組。\n\n' +
-      '御景家 YUJINGJIA 敬上';
-  } else {
-    subject = '【報名成功】御景家＿' + courseName;
-    body =
-      '親愛的 ' + userName + ' 您好：\n\n' +
-      '🎉 恭喜您！已成功報名「' + courseName + '」' + courseDate + ' 場次。\n\n' +
-      '━━━━━━━━━━━━━━━━━━━━\n' +
-      '📌 您的席次已確認保留\n' +
-      '━━━━━━━━━━━━━━━━━━━━\n\n' +
-      '課程費用：' + coursePrice + '\n' +
-      '繳費方式：課程當天現場現金繳費\n\n' +
-      '請於課程當天準時出席，並攜帶現金完成繳費。\n' +
-      '材料當天統一發放，敬請放心前來。\n\n' +
-      '如需取消，請於三日前透過官方 LINE 群組通知我們。\n\n' +
-      '非常期待與您一同感受神明花的藝術魅力 🌸\n\n' +
-      '御景家 YUJINGJIA 敬上';
-  }
-
-  MailApp.sendEmail({ to: userEmail, subject: subject, body: body });
-}
-
-
-// ─── 場次總覽分頁初始化 ──────────────────────────────────────
-function setupOverviewSheet() {
-  var ss      = SpreadsheetApp.getActiveSpreadsheet();
-  var name    = '場次總覽';
-  var existing = ss.getSheetByName(name);
-  if (existing) return existing;
-
-  var sheet   = ss.insertSheet(name);
-  var headers = ['場次', '課程名稱', '正取人數', '備取人數', '名額上限', '狀態'];
-  sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
-  sheet.getRange(1, 1, 1, headers.length)
-    .setFontWeight('bold').setBackground('#E8DCC4')
-    .setFontColor('#1C1A17').setHorizontalAlignment('center');
-  sheet.setFrozenRows(1);
-  [180, 140, 80, 80, 80, 80].forEach(function(w, i){ sheet.setColumnWidth(i+1, w); });
-  return sheet;
-}
-
-
-// ─── 報到單自動建立 ──────────────────────────────────────────
-function setupAttendanceSheet() {
-  var ss      = SpreadsheetApp.getActiveSpreadsheet();
-  var name    = '報到單';
-  var existing = ss.getSheetByName(name);
-  if (existing) ss.deleteSheet(existing);
-
-  var sheet   = ss.insertSheet(name);
-  var headers = ['場次', '姓名', '電話', '繳費狀態', '已繳費', '學員簽名', '出席'];
-  sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
-  sheet.getRange('A2').setFormula(
-    "=IFERROR(QUERY(報名資料!A:K,\"SELECT B,D,E,H WHERE G='✅正取' ORDER BY A ASC\",0),)"
-  );
-  sheet.getRange('E2:E51').insertCheckboxes();
-  sheet.getRange('G2:G51').insertCheckboxes();
-
-  sheet.getRange(1, 1, 1, headers.length)
-    .setFontFamily('Noto Sans TC').setFontSize(11).setFontWeight('bold')
-    .setFontColor('#1C1A17').setBackground('#E8DCC4')
-    .setHorizontalAlignment('center').setVerticalAlignment('middle');
-  sheet.setRowHeight(1, 40);
-  sheet.getRange(2, 1, 50, headers.length)
-    .setFontFamily('Noto Sans TC').setFontSize(10).setVerticalAlignment('middle');
-  for (var i = 2; i <= 51; i++) sheet.setRowHeight(i, 36);
-
-  [160, 90, 125, 100, 75, 140, 55].forEach(function(w, i){ sheet.setColumnWidth(i+1, w); });
-
-  var paidRule = SpreadsheetApp.newConditionalFormatRule()
-    .whenFormulaSatisfied('=$E2=TRUE').setBackground('#EAF4EA')
-    .setRanges([sheet.getRange('A2:G51')]).build();
-  var presentRule = SpreadsheetApp.newConditionalFormatRule()
-    .whenFormulaSatisfied('=$G2=TRUE').setFontColor('#8C8C8C')
-    .setRanges([sheet.getRange('A2:G51')]).build();
-  sheet.setConditionalFormatRules([paidRule, presentRule]);
-
-  sheet.getRange(1, 1, 51, headers.length)
-    .setBorder(true,true,true,true,true,true,'#D4B78F',SpreadsheetApp.BorderStyle.SOLID);
-  sheet.setHiddenGridlines(true);
-  sheet.setFrozenRows(1);
-  sheet.getRange('C2:C51').setHorizontalAlignment('center');
-  sheet.getRange('E2:E51').setHorizontalAlignment('center');
-  sheet.getRange('G2:G51').setHorizontalAlignment('center');
-
-  Logger.log('✅ 報到單已建立');
-  SpreadsheetApp.getUi().alert('✅ 報到單已成功建立！\n\n· A~D欄自動連動正取名單\n· E欄勾選→整列變綠\n· G欄出席勾選→字色淡化\n· F欄供現場手寫簽名');
-}
+    })();
+    </script>
+</body>
+</html>
